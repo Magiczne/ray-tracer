@@ -3,7 +3,6 @@ package color
 import (
 	"fmt"
 	"os"
-	"ray-tracer/math"
 	"ray-tracer/util"
 )
 
@@ -24,9 +23,9 @@ func (c *Color) CopyFrom(other *Color) {
 }
 
 func (c *Color) Write() {
-	r := math.LinearToGamma(c.r)
-	g := math.LinearToGamma(c.g)
-	b := math.LinearToGamma(c.b)
+	r := util.LinearToGamma(c.r)
+	g := util.LinearToGamma(c.g)
+	b := util.LinearToGamma(c.b)
 
 	rByte := int(256 * intensity.Clamp(r))
 	gByte := int(256 * intensity.Clamp(g))

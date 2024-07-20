@@ -11,11 +11,22 @@ import (
 )
 
 type Camera struct {
-	AspectRatio       float64
-	ImageWidth        int
-	imageHeight       int
-	SamplesPerPixel   int
-	MaxDepth          int
+	AspectRatio     float64
+	ImageWidth      int
+	imageHeight     int
+	SamplesPerPixel int
+	MaxDepth        int
+
+	VerticalFieldOfView int
+	LookFrom            vector.Point3
+	LookAt              vector.Point3
+	VectorUp            vector.Vector3
+
+	// Camera frame basis vectors
+	u vector.Vector3
+	v vector.Vector3
+	w vector.Vector3
+
 	center            vector.Point3
 	pixel00Location   vector.Point3
 	pixelDeltaU       vector.Vector3 // Offset to pixel to the right
@@ -25,10 +36,14 @@ type Camera struct {
 
 func NewCamera() *Camera {
 	return &Camera{
-		AspectRatio:     1,
-		ImageWidth:      100,
-		SamplesPerPixel: 10,
-		MaxDepth:        10,
+		AspectRatio:         1,
+		ImageWidth:          100,
+		SamplesPerPixel:     10,
+		MaxDepth:            10,
+		VerticalFieldOfView: 90,
+		LookFrom:            *vector.NewPoint3(0, 0, 0),
+		LookAt:              *vector.NewPoint3(0, 0, -1),
+		VectorUp:            *vector.NewVec3(0, 1, 0),
 	}
 }
 
@@ -59,25 +74,32 @@ func (c *Camera) Render(world Hittable) {
 
 func (c *Camera) initialize() {
 	c.imageHeight = int(float64(c.ImageWidth) / c.AspectRatio)
-	c.center = *vector.NewPoint3(0, 0, 0)
 
 	c.pixelSamplesScale = 1.0 / float64(c.SamplesPerPixel)
+	c.center.CopyFrom(&c.LookFrom)
 
-	// Viewport
-	focalLength := 1.0
-	viewportHeight := 2.0
+	// Determine viewport dimensions
+	focalLength := c.LookFrom.Substract(&c.LookAt).Length()
+	theta := util.DegToRad(float64(c.VerticalFieldOfView))
+	h := math.Tan(theta / 2)
+	viewportHeight := 2 * h * focalLength
 	viewportWidth := viewportHeight * (float64(c.ImageWidth) / float64(c.imageHeight))
 
+	// Calculate the uvw unit basis vectors for the camera coordinate frame
+	c.w = *vector.UnitVector(c.LookFrom.Substract(&c.LookAt))
+	c.u = *vector.UnitVector(vector.CrossProduct(&c.VectorUp, &c.w))
+	c.v = *vector.CrossProduct(&c.w, &c.u)
+
 	// Edge vectors
-	viewportU := vector.NewVec3(viewportWidth, 0, 0)
-	viewportV := vector.NewVec3(0, -viewportHeight, 0)
+	viewportU := c.u.MultiplyBy(viewportWidth)
+	viewportV := c.v.MultiplyBy(-1).MultiplyBy(viewportHeight)
 
 	// Delta vectors from pixel to pixel
 	c.pixelDeltaU = *viewportU.Divide(float64(c.ImageWidth))
 	c.pixelDeltaV = *viewportV.Divide(float64(c.imageHeight))
 
 	// Location of the left upper pixel
-	viewportUpperLeft := c.center.Substract(vector.NewVec3(0, 0, focalLength)).Substract(viewportU.Divide(2)).Substract(viewportV.Divide(2))
+	viewportUpperLeft := c.center.Substract(c.w.MultiplyBy(focalLength)).Substract(viewportU.Divide(2)).Substract(viewportV.Divide(2))
 	c.pixel00Location = *viewportUpperLeft.Add(c.pixelDeltaU.Add(&c.pixelDeltaV).MultiplyBy(0.5))
 }
 
