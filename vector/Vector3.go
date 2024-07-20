@@ -13,7 +13,7 @@ func EmptyVec3() *Vector3 {
 	return &Vector3{}
 }
 
-func NewVec3(x float64, y float64, z float64) *Vector3 {
+func NewVector3(x float64, y float64, z float64) *Vector3 {
 	return &Vector3{x, y, z}
 }
 
@@ -49,7 +49,7 @@ func (vec3 *Vector3) String() string {
 
 // Vector utility functions
 func (vec3 *Vector3) Add(other *Vector3) *Vector3 {
-	return NewVec3(vec3.x+other.x, vec3.y+other.y, vec3.z+other.z)
+	return NewVector3(vec3.x+other.x, vec3.y+other.y, vec3.z+other.z)
 }
 
 func (vec3 *Vector3) AddInPlace(other *Vector3) {
@@ -59,15 +59,15 @@ func (vec3 *Vector3) AddInPlace(other *Vector3) {
 }
 
 func (vec3 *Vector3) Substract(other *Vector3) *Vector3 {
-	return NewVec3(vec3.x-other.x, vec3.y-other.y, vec3.z-other.z)
+	return NewVector3(vec3.x-other.x, vec3.y-other.y, vec3.z-other.z)
 }
 
 func (vec3 *Vector3) Multiply(other *Vector3) *Vector3 {
-	return NewVec3(vec3.x*other.x, vec3.y*other.y, vec3.z*other.z)
+	return NewVector3(vec3.x*other.x, vec3.y*other.y, vec3.z*other.z)
 }
 
 func (vec3 *Vector3) MultiplyBy(multiplier float64) *Vector3 {
-	return NewVec3(vec3.x*multiplier, vec3.y*multiplier, vec3.z*multiplier)
+	return NewVector3(vec3.x*multiplier, vec3.y*multiplier, vec3.z*multiplier)
 }
 
 func (vec3 *Vector3) Divide(divisor float64) *Vector3 {

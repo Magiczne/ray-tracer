@@ -43,7 +43,7 @@ func NewCamera() *Camera {
 		VerticalFieldOfView: 90,
 		LookFrom:            *vector.NewPoint3(0, 0, 0),
 		LookAt:              *vector.NewPoint3(0, 0, -1),
-		VectorUp:            *vector.NewVec3(0, 1, 0),
+		VectorUp:            *vector.NewVector3(0, 1, 0),
 	}
 }
 
@@ -139,7 +139,7 @@ func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 }
 
 func (c *Camera) sampleSquare() *vector.Vector3 {
-	return vector.NewVec3(
+	return vector.NewVector3(
 		rand.Float64()-0.5,
 		rand.Float64()-0.5,
 		0,

@@ -35,7 +35,7 @@ func main() {
 	camera.VerticalFieldOfView = 20
 	camera.LookFrom = *vector.NewPoint3(-2, 2, 1)
 	camera.LookAt = *vector.NewPoint3(0, 0, -1)
-	camera.VectorUp = *vector.NewVec3(0, 1, 0)
+	camera.VectorUp = *vector.NewVector3(0, 1, 0)
 
 	camera.Render(world)
 }
