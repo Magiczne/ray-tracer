@@ -1,5 +1,10 @@
 package core
 
+import (
+	"ray-tracer/util"
+)
+
 type Hittable interface {
-	Hit(ray *Ray, rayTMin float64, rayTmax float64, hitRecord *HitRecord) bool
+	Display()
+	Hit(ray *Ray, rayT *util.Interval, hitRecord *HitRecord) bool
 }

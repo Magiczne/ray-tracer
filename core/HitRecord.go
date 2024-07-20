@@ -1,59 +1,45 @@
 package core
 
 import (
-	"ray-tracer/util"
+	"ray-tracer/vector"
 )
 
 type HitRecord struct {
-	point     util.Point3
-	normal    util.Vec3
-	t         float64
-	frontFace bool
+	Point     vector.Point3
+	Normal    vector.Vector3
+	Material  Material // TODO: Pointer?
+	T         float64
+	FrontFace bool
 }
 
 func NewHitRecord() *HitRecord {
 	return &HitRecord{
-		point:     *util.NewPoint3(0, 0, 0),
-		normal:    *util.EmptyVec3(),
-		t:         0,
-		frontFace: false,
+		Point:     *vector.NewPoint3(0, 0, 0),
+		Normal:    *vector.EmptyVec3(),
+		Material:  nil,
+		T:         0,
+		FrontFace: false,
 	}
 }
 
-func (hitRecord HitRecord) Point() util.Point3 {
-	return hitRecord.point
+func (hr *HitRecord) CopyFrom(another HitRecord) {
+	hr.Point = another.Point
+	hr.Normal = another.Normal
+	hr.Material = another.Material
+	hr.T = another.T
+	hr.FrontFace = another.FrontFace
 }
 
-func (hitRecord HitRecord) SetPoint(point util.Point3) {
-	hitRecord.point = point
-}
+func (hr *HitRecord) SetFaceNormal(ray *Ray, outwardNormal *vector.Vector3) {
+	hr.FrontFace = vector.DotProduct(&ray.Direction, outwardNormal) < 0
 
-func (hitRecord HitRecord) Normal() util.Vec3 {
-	return hitRecord.normal
-}
-
-func (hitRecord HitRecord) SetNormal(normal util.Vec3) {
-	hitRecord.normal = normal
-}
-
-func (hitRecord HitRecord) T() float64 {
-	return hitRecord.t
-}
-
-func (hitRecord HitRecord) SetT(t float64) {
-	hitRecord.t = t
-}
-
-func (hitRecord HitRecord) SetFaceNormal(ray *Ray, outwardNormal *util.Vec3) {
-	frontFace := ray.direction.DotProduct(*outwardNormal) < 0
-
-	if frontFace {
-		hitRecord.normal = *outwardNormal
+	if hr.FrontFace {
+		hr.Normal = *outwardNormal
 	} else {
-		hitRecord.normal = *outwardNormal.MultiplyBy(-1)
+		hr.Normal = *outwardNormal.MultiplyBy(-1)
 	}
 }
 
-func (hitRecord HitRecord) GetFrontFace() bool {
-	return hitRecord.frontFace
+func (hr *HitRecord) GetFrontFace() bool {
+	return hr.FrontFace
 }

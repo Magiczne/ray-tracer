@@ -1,77 +1,35 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"math"
-	"os"
+	"ray-tracer/color"
 	"ray-tracer/core"
+	"ray-tracer/material"
 	"ray-tracer/object"
-	"ray-tracer/util"
+	"ray-tracer/vector"
 )
 
-// TODO: Zaczynać od 6.8 (ale nie działa to co robilem od 6.3)
-
-func rayColor(ray *core.Ray, world core.Hittable) *util.Color {
-	hitRecord := core.NewHitRecord()
-
-	if world.Hit(ray, 0, math.Inf(1), hitRecord) {
-		return hitRecord.Normal().Add(*util.NewColor(1, 1, 1)).MultiplyBy(0.5)
-	}
-
-	unitDirection := ray.Direction().UnitVector()
-	a := 0.5 * (unitDirection.Y() + 1.0)
-
-	return util.NewColor(1, 1, 1).MultiplyBy(1.0 - a).Add(*util.NewColor(0.5, 0.7, 1.0).MultiplyBy(a))
-}
+// TODO: Zaczynać od 12
 
 func main() {
-	// Logging
-	stdErr := log.New(os.Stderr, "", 0)
-	stdOut := log.New(os.Stdout, "", 0)
+	world := core.NewHittableList()
 
-	// Image
-	aspectRatio := 16.0 / 9.0
-	imageWidth := 400
-	imageHeight := int(float64(imageWidth) / aspectRatio)
+	groundMaterial := material.NewLambertian(color.NewColor(0.8, 0.8, 0))
+	centerMaterial := material.NewLambertian(color.NewColor(0.1, 0.2, 0.5))
+	leftMaterial := material.NewDielectric(1.5)
+	bubbleMaterial := material.NewDielectric(1.0 / 1.5)
+	rightMaterial := material.NewMetal(color.NewColor(0.8, 0.6, 0.2), 1.0)
 
-	// World
-	world := core.HittableList{}
-	world.Add(object.NewSphere(*util.NewPoint3(0, 0, -1), 0.5))
-	world.Add(object.NewSphere(*util.NewPoint3(0, -100.5, -1), 100))
+	world.Add(object.NewSphere(*vector.NewPoint3(0.0, -100.5, -1.0), 100.0, groundMaterial))
+	world.Add(object.NewSphere(*vector.NewPoint3(0.0, 0.0, -1.2), 0.5, centerMaterial))
+	world.Add(object.NewSphere(*vector.NewPoint3(-1.0, 0.0, -1.0), 0.5, leftMaterial))
+	world.Add(object.NewSphere(*vector.NewPoint3(-1.0, 0.0, -1.0), 0.4, bubbleMaterial))
+	world.Add(object.NewSphere(*vector.NewPoint3(1.0, 0.0, -1.0), 0.5, rightMaterial))
+	// world.Display()
 
-	// Camera
-	focalLength := 1.0
-	viewportHeight := 2.0
-	viewportWidth := viewportHeight * (float64(imageWidth) / float64(imageHeight))
-	cameraCenter := util.NewPoint3(0, 0, 0)
-
-	viewportU := util.NewVec3(viewportWidth, 0, 0)
-	viewportV := util.NewVec3(0, -viewportHeight, 0)
-
-	pixelDeltaU := viewportU.Divide(float64(imageWidth))
-	pixelDeltaV := viewportV.Divide(float64(imageHeight))
-
-	viewportUpperLeft := cameraCenter.Substract(*util.NewVec3(0, 0, focalLength)).Substract(*viewportU.Divide(2)).Substract(*viewportV.Divide(2))
-	pixel00Location := viewportUpperLeft.Add(*pixelDeltaU.Add(*pixelDeltaV).MultiplyBy(0.5))
-
-	// Render
-	fmt.Println("P3")
-	fmt.Printf("%d %d\n", imageWidth, imageHeight)
-	fmt.Println(255)
-
-	for j := range imageHeight {
-		stdErr.Printf("Scanline remaining: %d", imageHeight-j)
-
-		for i := range imageWidth {
-			pixelCenter := pixel00Location.Add(*pixelDeltaU.MultiplyBy(float64(i))).Add(*pixelDeltaV.MultiplyBy(float64(j)))
-			rayDirection := pixelCenter.Substract(*cameraCenter)
-			ray := core.NewRay(*cameraCenter, *rayDirection)
-
-			pixelColor := rayColor(ray, world)
-			util.WriteColorTo(pixelColor, stdOut)
-		}
-	}
-
-	stdErr.Println("Done")
+	camera := core.NewCamera()
+	camera.SetAspectRatio(16.0 / 9)
+	camera.SetImageWidth(400)
+	camera.SetSamplesPerPixel(100)
+	camera.SetMaxDepth(50)
+	camera.Render(world)
 }

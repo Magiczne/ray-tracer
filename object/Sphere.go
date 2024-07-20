@@ -1,38 +1,36 @@
 package object
 
 import (
+	"fmt"
 	"math"
+	"os"
 	"ray-tracer/core"
 	"ray-tracer/util"
+	"ray-tracer/vector"
 )
 
 type Sphere struct {
-	center util.Point3
-	radius float64
+	Center   vector.Point3
+	Radius   float64
+	material core.Material // TODO: Pointer?
 }
 
-func NewSphere(center util.Point3, radius float64) *Sphere {
-	return &Sphere{center, radius}
+func NewSphere(center vector.Point3, radius float64, material core.Material) *Sphere {
+	return &Sphere{center, radius, material}
 }
 
-func (sphere Sphere) Center() util.Point3 {
-	return sphere.center
+func (s Sphere) Display() {
+	fmt.Fprintf(os.Stderr, "Sphere(c=%v r=%f)", s.Center, s.Radius)
 }
 
-func (shpere Sphere) Radius() float64 {
-	return shpere.radius
-}
-
-func (sphere Sphere) Hit(ray *core.Ray, rayTMin float64, rayTmax float64, hitRecord *core.HitRecord) bool {
-	oc := sphere.Center().Substract(ray.Origin())
-	a := ray.Direction().LengthSquared()
-	h := ray.Direction().DotProduct(*oc)
-	c := oc.LengthSquared() - sphere.radius*sphere.radius
+func (s Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitRecord) bool {
+	oc := s.Center.Substract(&ray.Origin)
+	a := ray.Direction.LengthSquared()
+	h := vector.DotProduct(&ray.Direction, oc)
+	c := oc.LengthSquared() - s.Radius*s.Radius
 	discriminant := h*h - a*c
 
 	if discriminant < 0 {
-		println("Delta < 0")
-
 		return false
 	}
 
@@ -41,20 +39,20 @@ func (sphere Sphere) Hit(ray *core.Ray, rayTMin float64, rayTmax float64, hitRec
 	// Find the nearest root that lies in the acceptable range.
 	root := (h - discriminantSqrt) / a
 
-	if root <= rayTMin || rayTmax <= root {
+	if !rayT.Surrounds(root) {
 		root = (h + discriminantSqrt) / a
 
-		if root <= rayTMin || rayTmax <= root {
+		if !rayT.Surrounds(root) {
 			return false
 		}
 	}
 
-	hitRecord.SetT(root)
-	hitRecord.SetPoint(*ray.At(hitRecord.T()))
-	hitRecord.SetNormal(*hitRecord.Point().Substract(sphere.center).Divide(sphere.radius))
+	hitRecord.T = root
+	hitRecord.Point = *ray.At(hitRecord.T)
 
-	outwardNormal := hitRecord.Point().Substract(sphere.center).Divide(sphere.Radius())
+	outwardNormal := hitRecord.Point.Substract(&s.Center).Divide(s.Radius)
 	hitRecord.SetFaceNormal(ray, outwardNormal)
+	hitRecord.Material = s.material
 
 	return true
 }
