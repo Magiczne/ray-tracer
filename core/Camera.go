@@ -11,11 +11,11 @@ import (
 )
 
 type Camera struct {
-	aspectRatio       float64
-	imageWidth        int
+	AspectRatio       float64
+	ImageWidth        int
 	imageHeight       int
-	samplesPerPixel   int
-	maxDepth          int
+	SamplesPerPixel   int
+	MaxDepth          int
 	center            vector.Point3
 	pixel00Location   vector.Point3
 	pixelDeltaU       vector.Vector3 // Offset to pixel to the right
@@ -25,45 +25,29 @@ type Camera struct {
 
 func NewCamera() *Camera {
 	return &Camera{
-		aspectRatio:     1,
-		imageWidth:      100,
-		samplesPerPixel: 10,
-		maxDepth:        10,
+		AspectRatio:     1,
+		ImageWidth:      100,
+		SamplesPerPixel: 10,
+		MaxDepth:        10,
 	}
-}
-
-func (c *Camera) SetAspectRatio(aspectRatio float64) {
-	c.aspectRatio = aspectRatio
-}
-
-func (c *Camera) SetImageWidth(imageWidth int) {
-	c.imageWidth = imageWidth
-}
-
-func (c *Camera) SetSamplesPerPixel(samplesPerPixel int) {
-	c.samplesPerPixel = samplesPerPixel
-}
-
-func (c *Camera) SetMaxDepth(depth int) {
-	c.maxDepth = depth
 }
 
 func (c *Camera) Render(world Hittable) {
 	c.initialize()
 
 	fmt.Println("P3")
-	fmt.Printf("%d %d\n", c.imageWidth, c.imageHeight)
+	fmt.Printf("%d %d\n", c.ImageWidth, c.imageHeight)
 	fmt.Println(255)
 
 	for j := range c.imageHeight {
 		fmt.Fprintf(os.Stderr, "Scanline remaining: %d\n", c.imageHeight-j)
 
-		for i := range c.imageWidth {
+		for i := range c.ImageWidth {
 			pixelColor := color.NewColor(0, 0, 0)
 
-			for range c.samplesPerPixel {
+			for range c.SamplesPerPixel {
 				ray := c.getRay(i, j)
-				pixelColor.AddInPlace(c.rayColor(ray, c.maxDepth, world))
+				pixelColor.AddInPlace(c.rayColor(ray, c.MaxDepth, world))
 			}
 
 			pixelColor.MultiplyBy(c.pixelSamplesScale).Write()
@@ -74,22 +58,22 @@ func (c *Camera) Render(world Hittable) {
 }
 
 func (c *Camera) initialize() {
-	c.imageHeight = int(float64(c.imageWidth) / c.aspectRatio)
+	c.imageHeight = int(float64(c.ImageWidth) / c.AspectRatio)
 	c.center = *vector.NewPoint3(0, 0, 0)
 
-	c.pixelSamplesScale = 1.0 / float64(c.samplesPerPixel)
+	c.pixelSamplesScale = 1.0 / float64(c.SamplesPerPixel)
 
 	// Viewport
 	focalLength := 1.0
 	viewportHeight := 2.0
-	viewportWidth := viewportHeight * (float64(c.imageWidth) / float64(c.imageHeight))
+	viewportWidth := viewportHeight * (float64(c.ImageWidth) / float64(c.imageHeight))
 
 	// Edge vectors
 	viewportU := vector.NewVec3(viewportWidth, 0, 0)
 	viewportV := vector.NewVec3(0, -viewportHeight, 0)
 
 	// Delta vectors from pixel to pixel
-	c.pixelDeltaU = *viewportU.Divide(float64(c.imageWidth))
+	c.pixelDeltaU = *viewportU.Divide(float64(c.ImageWidth))
 	c.pixelDeltaV = *viewportV.Divide(float64(c.imageHeight))
 
 	// Location of the left upper pixel

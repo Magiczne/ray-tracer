@@ -27,9 +27,9 @@ func main() {
 	// world.Display()
 
 	camera := core.NewCamera()
-	camera.SetAspectRatio(16.0 / 9)
-	camera.SetImageWidth(400)
-	camera.SetSamplesPerPixel(100)
-	camera.SetMaxDepth(50)
+	camera.AspectRatio = 16.0 / 9
+	camera.ImageWidth = 400
+	camera.SamplesPerPixel = 100
+	camera.MaxDepth = 50
 	camera.Render(world)
 }
