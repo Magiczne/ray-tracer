@@ -32,7 +32,7 @@ func main() {
 	camera.SamplesPerPixel = 100
 	camera.MaxDepth = 50
 
-	camera.VerticalFieldOfView = 90
+	camera.VerticalFieldOfView = 20
 	camera.LookFrom = *vector.NewPoint3(-2, 2, 1)
 	camera.LookAt = *vector.NewPoint3(0, 0, -1)
 	camera.VectorUp = *vector.NewVec3(0, 1, 0)

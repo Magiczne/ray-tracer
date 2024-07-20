@@ -33,3 +33,13 @@ func RandomVec3OnHemisphere(normal *Vector3) *Vector3 {
 
 	return UnitVector(onUnitSphere).MultiplyBy(-1)
 }
+
+func RandomVec3InUnitDisk() *Vector3 {
+	for {
+		vec := NewVec3(random.Float64(-1, 1), random.Float64(-1, 1), 0)
+
+		if vec.LengthSquared() < 1 {
+			return vec
+		}
+	}
+}
