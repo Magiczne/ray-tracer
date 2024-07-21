@@ -26,6 +26,14 @@ func NewAABBFromIntervals(x, y, z *util.Interval) *AABB {
 	}
 }
 
+func NewAABBFromAABB(box1, box2 *AABB) *AABB {
+	return &AABB{
+		X: util.NewIntervalFromIntervals(box1.X, box2.X),
+		Y: util.NewIntervalFromIntervals(box1.Y, box2.Y),
+		Z: util.NewIntervalFromIntervals(box1.Z, box2.Z),
+	}
+}
+
 // Treat the two points a and b as extrema for the bounding box, so we don't require a
 // particular minimum/maximum coordinate order.
 func NewAABBFromPoints(a, b *vector.Point3) *AABB {

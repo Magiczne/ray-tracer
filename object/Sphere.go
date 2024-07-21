@@ -14,26 +14,39 @@ type Sphere struct {
 	Radius       float64
 	IsMoving     bool
 	material     core.Material // TODO: Pointer?
+	boundingBox  *core.AABB
 }
 
 func NewSphere(center vector.Point3, radius float64, material core.Material) *Sphere {
+	radiusVector := vector.NewVector3(radius, radius, radius)
+
 	return &Sphere{
 		centerStart:  center,
 		CenterVector: *vector.EmptyVec3(), // TODO: nil
 		Radius:       radius,
 		IsMoving:     false,
 		material:     material,
+		boundingBox:  core.NewAABBFromPoints(center.Substract(radiusVector), center.Add(radiusVector)),
 	}
 }
 
 func NewMovingSphere(center1 vector.Point3, center2 vector.Point3, radius float64, material core.Material) *Sphere {
+	radiusVector := vector.NewVector3(radius, radius, radius)
+	box1 := core.NewAABBFromPoints(center1.Substract(radiusVector), center1.Add(radiusVector))
+	box2 := core.NewAABBFromPoints(center2.Substract(radiusVector), center2.Add(radiusVector))
+
 	return &Sphere{
 		centerStart:  center1,
 		CenterVector: *center2.Substract(&center1),
 		Radius:       radius,
 		IsMoving:     true,
 		material:     material,
+		boundingBox:  core.NewAABBFromAABB(box1, box2),
 	}
+}
+
+func (s *Sphere) BoundingBox() *core.AABB {
+	return s.boundingBox
 }
 
 func (s *Sphere) Display() {

@@ -28,6 +28,28 @@ func NewInterval(min float64, max float64) *Interval {
 	}
 }
 
+func NewIntervalFromIntervals(a, b *Interval) *Interval {
+	var min float64
+	var max float64
+
+	if a.Min <= b.Min {
+		min = a.Min
+	} else {
+		min = b.Min
+	}
+
+	if a.Max >= b.Max {
+		max = a.Max
+	} else {
+		max = b.Max
+	}
+
+	return &Interval{
+		Min: min,
+		Max: max,
+	}
+}
+
 func (i *Interval) Size() float64 {
 	return i.Max - i.Min
 }

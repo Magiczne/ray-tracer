@@ -7,21 +7,29 @@ import (
 
 type HittableList struct {
 	Hittable
-	objects []Hittable
+	boundingBox *AABB
+	objects     []Hittable
 }
 
 func NewHittableList() *HittableList {
 	return &HittableList{
-		objects: make([]Hittable, 0),
+		boundingBox: EmptyAABB(),
+		objects:     make([]Hittable, 0),
 	}
 }
 
 func (h *HittableList) Clear() {
+	// TODO: clear bounding box when clearing?
 	h.objects = make([]Hittable, 0)
 }
 
 func (h *HittableList) Add(hittable Hittable) {
 	h.objects = append(h.objects, hittable)
+	h.boundingBox = NewAABBFromAABB(h.boundingBox, hittable.BoundingBox())
+}
+
+func (h *HittableList) BoundingBox() *AABB {
+	return h.boundingBox
 }
 
 func (h *HittableList) Display() {
