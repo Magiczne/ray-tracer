@@ -8,6 +8,7 @@ import (
 	"ray-tracer/util"
 	"ray-tracer/vector"
 	"ray-tracer/writer"
+	"time"
 )
 
 type Camera struct {
@@ -56,6 +57,8 @@ func NewCamera() *Camera {
 }
 
 func (c *Camera) Render(world Hittable, writer *writer.Writer) {
+	start := time.Now()
+
 	c.initialize()
 
 	writer.WriteHeader(c.ImageWidth, c.imageHeight)
@@ -75,7 +78,8 @@ func (c *Camera) Render(world Hittable, writer *writer.Writer) {
 		}
 	}
 
-	fmt.Println("Done")
+	elapsed := time.Since(start)
+	fmt.Printf("Done in %s\n", elapsed)
 }
 
 func (c *Camera) initialize() {
