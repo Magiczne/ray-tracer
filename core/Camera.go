@@ -17,10 +17,16 @@ type Camera struct {
 	SamplesPerPixel int
 	MaxDepth        int
 
-	VerticalFieldOfView int
+	VerticalFieldOfView float64
 	LookFrom            vector.Point3
 	LookAt              vector.Point3
 	VectorUp            vector.Vector3
+
+	// Defocus (Depth of field)
+	DefocusAngle  float64
+	FocusDistance float64
+	defocusDiskU  vector.Vector3
+	defocusDiskV  vector.Vector3
 
 	// Camera frame basis vectors
 	u vector.Vector3
@@ -44,6 +50,8 @@ func NewCamera() *Camera {
 		LookFrom:            *vector.NewPoint3(0, 0, 0),
 		LookAt:              *vector.NewPoint3(0, 0, -1),
 		VectorUp:            *vector.NewVector3(0, 1, 0),
+		DefocusAngle:        0,
+		FocusDistance:       10,
 	}
 }
 
@@ -79,10 +87,9 @@ func (c *Camera) initialize() {
 	c.center.CopyFrom(&c.LookFrom)
 
 	// Determine viewport dimensions
-	focalLength := c.LookFrom.Substract(&c.LookAt).Length()
-	theta := util.DegToRad(float64(c.VerticalFieldOfView))
+	theta := util.DegToRad(c.VerticalFieldOfView)
 	h := math.Tan(theta / 2)
-	viewportHeight := 2 * h * focalLength
+	viewportHeight := 2 * h * c.FocusDistance
 	viewportWidth := viewportHeight * (float64(c.ImageWidth) / float64(c.imageHeight))
 
 	// Calculate the uvw unit basis vectors for the camera coordinate frame
@@ -99,15 +106,25 @@ func (c *Camera) initialize() {
 	c.pixelDeltaV = *viewportV.Divide(float64(c.imageHeight))
 
 	// Location of the left upper pixel
-	viewportUpperLeft := c.center.Substract(c.w.MultiplyBy(focalLength)).Substract(viewportU.Divide(2)).Substract(viewportV.Divide(2))
+	viewportUpperLeft := c.center.Substract(c.w.MultiplyBy(c.FocusDistance)).Substract(viewportU.Divide(2)).Substract(viewportV.Divide(2))
 	c.pixel00Location = *viewportUpperLeft.Add(c.pixelDeltaU.Add(&c.pixelDeltaV).MultiplyBy(0.5))
+
+	// Calculate the camera defocus disk basis vectors.
+	defocusRadius := c.FocusDistance * math.Tan(util.DegToRad(c.DefocusAngle/2))
+	c.defocusDiskU = *c.u.MultiplyBy(defocusRadius)
+	c.defocusDiskV = *c.v.MultiplyBy(defocusRadius)
 }
 
 func (c *Camera) getRay(i int, j int) *Ray {
 	offset := c.sampleSquare()
 
 	pixelSample := c.pixel00Location.Add(c.pixelDeltaU.MultiplyBy(float64(i) + offset.X())).Add(c.pixelDeltaV.MultiplyBy(float64(j) + offset.Y()))
+
 	rayOrigin := c.center
+	if c.DefocusAngle > 0 {
+		rayOrigin = *c.defocusDiskSample()
+	}
+
 	rayDirection := pixelSample.Substract(&rayOrigin)
 
 	return NewRay(rayOrigin, *rayDirection)
@@ -144,4 +161,10 @@ func (c *Camera) sampleSquare() *vector.Vector3 {
 		rand.Float64()-0.5,
 		0,
 	)
+}
+
+func (c *Camera) defocusDiskSample() *vector.Point3 {
+	p := vector.RandomVector3InUnitDisk()
+
+	return c.center.Add(c.defocusDiskU.MultiplyBy(p.X())).Add(c.defocusDiskV.MultiplyBy(p.Y()))
 }
