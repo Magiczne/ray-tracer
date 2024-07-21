@@ -43,7 +43,7 @@ func (d *Dielectic) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuat
 		direction = vector.Refract(unitDirection, &hitRecord.Normal, refractionIndex)
 	}
 
-	scattered.CopyFrom(core.NewRay(hitRecord.Point, *direction))
+	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, *direction, rayIn.Time))
 
 	return true
 }

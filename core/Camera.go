@@ -125,7 +125,11 @@ func (c *Camera) getRay(i int, j int) *Ray {
 
 	rayDirection := pixelSample.Substract(&rayOrigin)
 
-	return NewRay(rayOrigin, *rayDirection)
+	// We're forcing the ray tracer to render frame as it was starting in t=0 and ending in t=1,
+	// so we just generate random times between 0 and 1 for our rays.
+	rayTime := rand.Float64()
+
+	return NewTimedRay(rayOrigin, *rayDirection, rayTime)
 }
 
 func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {

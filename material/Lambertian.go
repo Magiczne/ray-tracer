@@ -25,7 +25,7 @@ func (l *Lambertian) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenua
 		scatterDirection.CopyFrom(&hitRecord.Normal)
 	}
 
-	scattered.CopyFrom(core.NewRay(hitRecord.Point, *scatterDirection))
+	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, *scatterDirection, rayIn.Time))
 	attenuation.CopyFrom(l.albedo)
 
 	return true

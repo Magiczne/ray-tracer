@@ -9,21 +9,44 @@ import (
 )
 
 type Sphere struct {
-	Center   vector.Point3
-	Radius   float64
-	material core.Material // TODO: Pointer?
+	centerStart  vector.Point3
+	CenterVector vector.Vector3
+	Radius       float64
+	IsMoving     bool
+	material     core.Material // TODO: Pointer?
 }
 
 func NewSphere(center vector.Point3, radius float64, material core.Material) *Sphere {
-	return &Sphere{center, radius, material}
+	return &Sphere{
+		centerStart:  center,
+		CenterVector: *vector.EmptyVec3(), // TODO: nil
+		Radius:       radius,
+		IsMoving:     false,
+		material:     material,
+	}
 }
 
-func (s Sphere) Display() {
-	fmt.Printf("Sphere(c=%v r=%f)", s.Center, s.Radius)
+func NewMovingSphere(center1 vector.Point3, center2 vector.Point3, radius float64, material core.Material) *Sphere {
+	return &Sphere{
+		centerStart:  center1,
+		CenterVector: *center2.Substract(&center1),
+		Radius:       radius,
+		IsMoving:     true,
+		material:     material,
+	}
 }
 
-func (s Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitRecord) bool {
-	oc := s.Center.Substract(&ray.Origin)
+func (s *Sphere) Display() {
+	fmt.Printf("Sphere(c=%v, cv=%v, r=%f)", s.centerStart, s.CenterVector, s.Radius)
+}
+
+func (s *Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitRecord) bool {
+	center := s.centerStart
+	if s.IsMoving {
+		center = *s.Center(ray.Time)
+	}
+
+	oc := center.Substract(&ray.Origin)
 	a := ray.Direction.LengthSquared()
 	h := vector.DotProduct(&ray.Direction, oc)
 	c := oc.LengthSquared() - s.Radius*s.Radius
@@ -49,9 +72,13 @@ func (s Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitRecor
 	hitRecord.T = root
 	hitRecord.Point = *ray.At(hitRecord.T)
 
-	outwardNormal := hitRecord.Point.Substract(&s.Center).Divide(s.Radius)
+	outwardNormal := hitRecord.Point.Substract(&center).Divide(s.Radius)
 	hitRecord.SetFaceNormal(ray, outwardNormal)
 	hitRecord.Material = s.material
 
 	return true
+}
+
+func (s *Sphere) Center(time float64) *vector.Point3 {
+	return s.centerStart.Add(s.CenterVector.MultiplyBy(time))
 }

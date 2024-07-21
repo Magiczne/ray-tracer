@@ -42,7 +42,9 @@ func main() {
 					// diffuse
 					albedo := color.RandomColor(0, 1).Multiply(color.RandomColor(0, 1))
 					material := material.NewLambertian(albedo)
-					world.Add(object.NewSphere(*center, 0.2, material))
+					center2 := center.Add(vector.NewVector3(0, random.Float64(0, 0.5), 0))
+
+					world.Add(object.NewMovingSphere(*center, *center2, 0.2, material))
 				} else if chooseMat < 0.95 {
 					// metal
 					albedo := color.RandomColor(0.5, 1)
@@ -79,8 +81,8 @@ func main() {
 	// Camera
 	camera := core.NewCamera()
 	camera.AspectRatio = 16.0 / 9
-	camera.ImageWidth = 150     // 1200
-	camera.SamplesPerPixel = 50 // 500
+	camera.ImageWidth = 400      // 1200
+	camera.SamplesPerPixel = 100 // 500
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20

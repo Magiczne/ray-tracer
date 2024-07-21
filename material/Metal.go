@@ -25,7 +25,7 @@ func (m *Metal) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation 
 	reflected := vector.Reflect(&rayIn.Direction, &hitRecord.Normal)
 	reflected = vector.UnitVector(reflected).Add(vector.RandomUnitVector().MultiplyBy(m.fuzz))
 
-	scattered.CopyFrom(core.NewRay(hitRecord.Point, *reflected))
+	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, *reflected, rayIn.Time))
 	attenuation.CopyFrom(m.albedo)
 
 	return vector.DotProduct(&scattered.Direction, &hitRecord.Normal) > 0
