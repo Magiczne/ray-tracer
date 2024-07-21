@@ -1,8 +1,7 @@
-package collision
+package core
 
 import (
 	"ray-tracer/constants"
-	"ray-tracer/core"
 	"ray-tracer/util"
 	"ray-tracer/vector"
 )
@@ -69,16 +68,16 @@ func (aabb *AABB) AxisInterval(axis constants.Axis) *util.Interval {
 	return aabb.X
 }
 
-func (aabb *AABB) Hit(ray *core.Ray, rayT *util.Interval) bool {
+func (aabb *AABB) Hit(ray *Ray, rayT *util.Interval) bool {
 	rayOrigin := ray.Origin
 	rayDirection := ray.Direction
 
 	for axis := range 3 {
-		axisInterval := aabb.AxisInterval(core.Axis(axis))
-		adinv := 1.0 / rayDirection[axis]
+		axisInterval := aabb.AxisInterval(constants.Axis(axis))
+		adinv := 1.0 / rayDirection.Axis(constants.Axis(axis))
 
-		t0 := (axisInterval.Min - rayOrigin.Axis(axis)) * adinv
-		t1 := (axisInterval.Max - rayOriginaxis)) * adinv
+		t0 := (axisInterval.Min - rayOrigin.Axis(constants.Axis(axis))) * adinv
+		t1 := (axisInterval.Max - rayOrigin.Axis(constants.Axis(axis))) * adinv
 
 		if t0 < t1 {
 			if t0 > rayT.Min {
