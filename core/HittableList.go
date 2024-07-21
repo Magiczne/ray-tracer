@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"ray-tracer/util"
 )
 
@@ -11,7 +10,7 @@ type HittableList struct {
 	objects     []Hittable
 }
 
-func NewHittableList() *HittableList {
+func EmptyHittableList() *HittableList {
 	return &HittableList{
 		boundingBox: EmptyAABB(),
 		objects:     make([]Hittable, 0),
@@ -32,12 +31,8 @@ func (h *HittableList) BoundingBox() *AABB {
 	return h.boundingBox
 }
 
-func (h *HittableList) Display() {
-	fmt.Printf("HittableList(objects=%d)", len(h.objects))
-
-	for _, object := range h.objects {
-		object.Display()
-	}
+func (h *HittableList) Objects() []Hittable {
+	return h.objects
 }
 
 func (h *HittableList) Hit(ray *Ray, rayT *util.Interval, hitRecord *HitRecord) bool {
