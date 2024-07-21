@@ -3,7 +3,6 @@ package object
 import (
 	"fmt"
 	"math"
-	"os"
 	"ray-tracer/core"
 	"ray-tracer/util"
 	"ray-tracer/vector"
@@ -20,7 +19,7 @@ func NewSphere(center vector.Point3, radius float64, material core.Material) *Sp
 }
 
 func (s Sphere) Display() {
-	fmt.Fprintf(os.Stderr, "Sphere(c=%v r=%f)", s.Center, s.Radius)
+	fmt.Printf("Sphere(c=%v r=%f)", s.Center, s.Radius)
 }
 
 func (s Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitRecord) bool {

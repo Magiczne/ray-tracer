@@ -2,12 +2,14 @@ package main
 
 import (
 	"math/rand"
+	"os"
 	"ray-tracer/color"
 	"ray-tracer/core"
 	"ray-tracer/material"
 	"ray-tracer/object"
 	"ray-tracer/random"
 	"ray-tracer/vector"
+	"ray-tracer/writer"
 )
 
 // TODO: Zaczynać od 12
@@ -67,10 +69,18 @@ func main() {
 
 	// world.Display()
 
+	// Writer
+	if len(os.Args) < 2 {
+		panic("You need to supply file name")
+	}
+
+	writer := writer.NewWriter(os.Args[1])
+
+	// Camera
 	camera := core.NewCamera()
 	camera.AspectRatio = 16.0 / 9
-	camera.ImageWidth = 1200
-	camera.SamplesPerPixel = 500
+	camera.ImageWidth = 150     // 1200
+	camera.SamplesPerPixel = 50 // 500
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20
@@ -81,5 +91,5 @@ func main() {
 	camera.DefocusAngle = 0.6
 	camera.FocusDistance = 10.0
 
-	camera.Render(world)
+	camera.Render(world, writer)
 }

@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"os"
 	"ray-tracer/util"
 )
 
@@ -26,7 +25,7 @@ func (h *HittableList) Add(hittable Hittable) {
 }
 
 func (h *HittableList) Display() {
-	fmt.Fprintf(os.Stderr, "Hittable list: %d", len(h.objects))
+	fmt.Printf("HittableList(objects=%d)", len(h.objects))
 
 	for _, object := range h.objects {
 		object.Display()

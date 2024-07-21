@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"os"
 	"ray-tracer/color"
 	"ray-tracer/util"
 	"ray-tracer/vector"
+	"ray-tracer/writer"
 )
 
 type Camera struct {
@@ -55,15 +55,13 @@ func NewCamera() *Camera {
 	}
 }
 
-func (c *Camera) Render(world Hittable) {
+func (c *Camera) Render(world Hittable, writer *writer.Writer) {
 	c.initialize()
 
-	fmt.Println("P3")
-	fmt.Printf("%d %d\n", c.ImageWidth, c.imageHeight)
-	fmt.Println(255)
+	writer.WriteHeader(c.ImageWidth, c.imageHeight)
 
 	for j := range c.imageHeight {
-		fmt.Fprintf(os.Stderr, "Scanline remaining: %d\n", c.imageHeight-j)
+		fmt.Printf("Scanline remaining: %d\n", c.imageHeight-j)
 
 		for i := range c.ImageWidth {
 			pixelColor := color.NewColor(0, 0, 0)
@@ -73,11 +71,11 @@ func (c *Camera) Render(world Hittable) {
 				pixelColor.AddInPlace(c.rayColor(ray, c.MaxDepth, world))
 			}
 
-			pixelColor.MultiplyBy(c.pixelSamplesScale).Write()
+			writer.WriteColor(pixelColor.MultiplyBy(c.pixelSamplesScale))
 		}
 	}
 
-	fmt.Fprintf(os.Stderr, "Done\n")
+	fmt.Println("Done")
 }
 
 func (c *Camera) initialize() {
