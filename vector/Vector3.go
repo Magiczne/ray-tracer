@@ -3,6 +3,7 @@ package vector
 import (
 	"fmt"
 	"math"
+	"ray-tracer/constants"
 )
 
 type Vector3 struct {
@@ -33,6 +34,18 @@ func (vec3 *Vector3) Y() float64 {
 
 func (vec3 *Vector3) Z() float64 {
 	return vec3.z
+}
+
+func (vec3 *Vector3) Axis(axis constants.Axis) float64 {
+	if axis == constants.AxisY {
+		return vec3.y
+	}
+
+	if axis == constants.AxisZ {
+		return vec3.z
+	}
+
+	return vec3.x
 }
 
 func (vec3 *Vector3) Length() float64 {

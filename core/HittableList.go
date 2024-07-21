@@ -35,10 +35,10 @@ func (h *HittableList) Display() {
 func (h *HittableList) Hit(ray *Ray, rayT *util.Interval, hitRecord *HitRecord) bool {
 	tempRecord := NewHitRecord()
 	hitAnything := false
-	closestSoFar := rayT.Max()
+	closestSoFar := rayT.Max
 
 	for _, object := range h.objects {
-		if object.Hit(ray, util.NewInterval(rayT.Min(), closestSoFar), tempRecord) {
+		if object.Hit(ray, util.NewInterval(rayT.Min, closestSoFar), tempRecord) {
 			hitAnything = true
 			closestSoFar = tempRecord.T
 			hitRecord.CopyFrom(*tempRecord)
