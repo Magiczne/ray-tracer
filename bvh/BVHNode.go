@@ -56,7 +56,7 @@ func (node *BVHNode) Hit(ray *core.Ray, rayTime *util.Interval) *core.HitRecord 
 	hitRecordRight := node.right.Hit(ray, rayTime)
 
 	if hitRecordLeft != nil && hitRecordRight != nil {
-		if hitRecordLeft.T < hitRecordRight.T {
+		if hitRecordLeft.Time < hitRecordRight.Time {
 			return hitRecordLeft
 		}
 

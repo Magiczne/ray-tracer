@@ -8,7 +8,9 @@ type HitRecord struct {
 	Point     *vector.Point3
 	Normal    *vector.Vector3
 	Material  Material
-	T         float64
+	Time      float64
+	U         float64
+	V         float64
 	FrontFace bool
 }
 
@@ -17,7 +19,9 @@ func EmptyHitRecord() *HitRecord {
 		Point:     vector.NewPoint3(0, 0, 0),
 		Normal:    vector.EmptyVec3(),
 		Material:  nil,
-		T:         0,
+		Time:      0,
+		U:         0,
+		V:         0,
 		FrontFace: false,
 	}
 }

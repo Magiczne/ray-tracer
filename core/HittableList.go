@@ -45,7 +45,7 @@ func (h *HittableList) Hit(ray *Ray, rayT *util.Interval) *HitRecord {
 		if tempRecord != nil {
 			hitAnything = true
 			hitRecord = tempRecord
-			closestSoFar = tempRecord.T
+			closestSoFar = tempRecord.Time
 		}
 	}
 
