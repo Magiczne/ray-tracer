@@ -65,15 +65,15 @@ func NewAABBFromPoints(a, b *vector.Point3) *AABB {
 }
 
 func (aabb *AABB) AxisInterval(axis constants.Axis) *util.Interval {
+	if axis == constants.AxisX {
+		return aabb.X
+	}
+
 	if axis == constants.AxisY {
 		return aabb.Y
 	}
 
-	if axis == constants.AxisZ {
-		return aabb.Z
-	}
-
-	return aabb.X
+	return aabb.Z
 }
 
 func (aabb *AABB) Hit(ray *Ray, rayT *util.Interval) bool {

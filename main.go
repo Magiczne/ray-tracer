@@ -81,7 +81,7 @@ func main() {
 	camera := core.NewCamera()
 	camera.AspectRatio = 16.0 / 9
 	camera.ImageWidth = 200     // 1200/400
-	camera.SamplesPerPixel = 50 // 500/101
+	camera.SamplesPerPixel = 10 // 500/101
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20

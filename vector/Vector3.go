@@ -37,15 +37,15 @@ func (vec3 *Vector3) Z() float64 {
 }
 
 func (vec3 *Vector3) Axis(axis constants.Axis) float64 {
+	if axis == constants.AxisX {
+		return vec3.x
+	}
+
 	if axis == constants.AxisY {
 		return vec3.y
 	}
 
-	if axis == constants.AxisZ {
-		return vec3.z
-	}
-
-	return vec3.x
+	return vec3.z
 }
 
 func (vec3 *Vector3) Length() float64 {
