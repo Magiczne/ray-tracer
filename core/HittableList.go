@@ -5,7 +5,6 @@ import (
 )
 
 type HittableList struct {
-	Hittable
 	boundingBox *AABB
 	objects     []Hittable
 }
@@ -18,7 +17,7 @@ func EmptyHittableList() *HittableList {
 }
 
 func (h *HittableList) Clear() {
-	// TODO: clear bounding box when clearing?
+	h.boundingBox = EmptyAABB()
 	h.objects = make([]Hittable, 0)
 }
 
@@ -44,7 +43,7 @@ func (h *HittableList) Hit(ray *Ray, rayT *util.Interval, hitRecord *HitRecord) 
 		if object.Hit(ray, util.NewInterval(rayT.Min, closestSoFar), tempRecord) {
 			hitAnything = true
 			closestSoFar = tempRecord.T
-			hitRecord.CopyFrom(*tempRecord)
+			hitRecord.CopyFrom(tempRecord)
 		}
 	}
 

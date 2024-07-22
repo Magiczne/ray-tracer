@@ -8,7 +8,6 @@ import (
 )
 
 type Metal struct {
-	core.Material
 	albedo *color.Color
 	fuzz   float64
 }
@@ -21,12 +20,11 @@ func NewMetal(albedo *color.Color, fuzz float64) *Metal {
 }
 
 func (m *Metal) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
-	// TODO: Coś z pointerami posrane
-	reflected := vector.Reflect(&rayIn.Direction, &hitRecord.Normal)
+	reflected := vector.Reflect(rayIn.Direction, hitRecord.Normal)
 	reflected = vector.UnitVector(reflected).Add(vector.RandomUnitVector().MultiplyBy(m.fuzz))
 
-	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, *reflected, rayIn.Time))
+	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, reflected, rayIn.Time))
 	attenuation.CopyFrom(m.albedo)
 
-	return vector.DotProduct(&scattered.Direction, &hitRecord.Normal) > 0
+	return vector.DotProduct(scattered.Direction, hitRecord.Normal) > 0
 }

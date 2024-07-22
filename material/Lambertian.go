@@ -7,7 +7,6 @@ import (
 )
 
 type Lambertian struct {
-	core.Material
 	albedo *color.Color
 }
 
@@ -22,10 +21,10 @@ func (l *Lambertian) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenua
 
 	// Catch degenerate scatter direction
 	if scatterDirection.NearZero() {
-		scatterDirection.CopyFrom(&hitRecord.Normal)
+		scatterDirection.CopyFrom(hitRecord.Normal)
 	}
 
-	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, *scatterDirection, rayIn.Time))
+	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, scatterDirection, rayIn.Time))
 	attenuation.CopyFrom(l.albedo)
 
 	return true

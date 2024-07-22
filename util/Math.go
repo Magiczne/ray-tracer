@@ -15,3 +15,11 @@ func LinearToGamma(linearComponent float64) float64 {
 func DegToRad(deg float64) float64 {
 	return deg * math.Pi / 180
 }
+
+func Reflectance(cos float64, refractionIndex float64) float64 {
+	// Use Schlick's approximation for reflectance.
+	r0 := (1 - refractionIndex) / (1 + refractionIndex)
+	r0 = r0 * r0
+
+	return r0 + (1-r0)*math.Pow(1-cos, 5)
+}

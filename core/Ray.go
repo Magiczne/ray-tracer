@@ -5,12 +5,12 @@ import (
 )
 
 type Ray struct {
-	Origin    vector.Point3
-	Direction vector.Vector3
+	Origin    *vector.Point3
+	Direction *vector.Vector3
 	Time      float64
 }
 
-func NewRay(origin vector.Point3, direction vector.Vector3) *Ray {
+func NewRay(origin *vector.Point3, direction *vector.Vector3) *Ray {
 	return &Ray{
 		Origin:    origin,
 		Direction: direction,
@@ -18,7 +18,7 @@ func NewRay(origin vector.Point3, direction vector.Vector3) *Ray {
 	}
 }
 
-func NewTimedRay(origin vector.Point3, direction vector.Vector3, time float64) *Ray {
+func NewTimedRay(origin *vector.Point3, direction *vector.Vector3, time float64) *Ray {
 	return &Ray{
 		Origin:    origin,
 		Direction: direction,
@@ -28,8 +28,8 @@ func NewTimedRay(origin vector.Point3, direction vector.Vector3, time float64) *
 
 func EmptyRay() *Ray {
 	return &Ray{
-		Origin:    *vector.NewPoint3(0, 0, 0),
-		Direction: *vector.EmptyVec3(),
+		Origin:    vector.NewPoint3(0, 0, 0),
+		Direction: vector.EmptyVec3(),
 		Time:      0,
 	}
 }
