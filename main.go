@@ -12,10 +12,8 @@ import (
 	"ray-tracer/writer"
 )
 
-// TODO: Zaczynać od 12
-
 func main() {
-	world := core.NewHittableList()
+	world := core.EmptyHittableList()
 
 	// groundMaterial := material.NewLambertian(color.NewColor(0.8, 0.8, 0))
 	// centerMaterial := material.NewLambertian(color.NewColor(0.1, 0.2, 0.5))
@@ -81,8 +79,8 @@ func main() {
 	// Camera
 	camera := core.NewCamera()
 	camera.AspectRatio = 16.0 / 9
-	camera.ImageWidth = 400      // 1200
-	camera.SamplesPerPixel = 100 // 500
+	camera.ImageWidth = 200     // 1200/400
+	camera.SamplesPerPixel = 50 // 500/101
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20
