@@ -5,7 +5,7 @@ import (
 	"ray-tracer/constants"
 	"ray-tracer/core"
 	"ray-tracer/util"
-	"slices"
+	"sort"
 )
 
 type BVHNode struct {
@@ -14,41 +14,23 @@ type BVHNode struct {
 	right       core.Hittable
 }
 
-func NewBVHNodeFromHittableList(hittableList core.HittableList) *BVHNode {
-	return NewBVHNodeFromListOfObjects(hittableList.Objects(), 0, len(hittableList.Objects()))
-}
-
-func NewBVHNodeFromListOfObjects(objects []core.Hittable, start int, end int) *BVHNode {
+func NewBVHNode(objects []core.Hittable) *BVHNode {
 	axis := constants.Axis(rand.Int31n(3))
-	objectSpan := end - start
+
+	sort.Slice(objects, func(i, j int) bool {
+		return core.AABBSortByAxis(objects[i].BoundingBox(), objects[j].BoundingBox(), axis)
+	})
 
 	var left, right core.Hittable
-	if objectSpan == 1 {
-		left = objects[start]
-		right = objects[start]
-	} else if objectSpan == 2 {
-		left = objects[start]
-		right = objects[start+1]
+	if len(objects) == 1 {
+		left = objects[0]
+		right = objects[0]
+	} else if len(objects) == 2 {
+		left = objects[0]
+		right = objects[1]
 	} else {
-		slices.SortFunc(objects[start:end], func(a, b core.Hittable) int {
-			aAxisInterval := a.BoundingBox().AxisInterval(axis)
-			bAxisInterval := b.BoundingBox().AxisInterval(axis)
-
-			// TODO: Handle equals?
-			if aAxisInterval.Min < bAxisInterval.Min {
-				return -1
-			}
-
-			if aAxisInterval.Min > bAxisInterval.Min {
-				return 1
-			}
-
-			return 0
-		})
-
-		mid := start + objectSpan/2
-		left = NewBVHNodeFromListOfObjects(objects, start, mid)
-		right = NewBVHNodeFromListOfObjects(objects, mid, end)
+		left = NewBVHNode(objects[:len(objects)/2])
+		right = NewBVHNode(objects[len(objects)/2:])
 	}
 
 	return &BVHNode{

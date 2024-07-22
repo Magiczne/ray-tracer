@@ -1,6 +1,7 @@
 package core
 
 import (
+	"math"
 	"ray-tracer/constants"
 	"ray-tracer/util"
 	"ray-tracer/vector"
@@ -85,28 +86,21 @@ func (aabb *AABB) Hit(ray *Ray, rayTime *util.Interval) bool {
 		t0 := (axisInterval.Min - ray.Origin.Axis(constantAxis)) * directionAxisInverted
 		t1 := (axisInterval.Max - ray.Origin.Axis(constantAxis)) * directionAxisInverted
 
-		if t0 < t1 {
-			if t0 > rayTime.Min {
-				rayTime.Min = t0
-			}
-
-			if t1 < rayTime.Max {
-				rayTime.Max = t1
-			}
-		} else {
-			if t1 > rayTime.Min {
-				rayTime.Min = t1
-			}
-
-			if t0 < rayTime.Max {
-				rayTime.Max = t0
-			}
+		if directionAxisInverted < 0.0 {
+			t0, t1 = t1, t0
 		}
 
-		if rayTime.Max <= rayTime.Min {
+		tMin := math.Max(t0, rayTime.Min)
+		tMax := math.Min(t1, rayTime.Max)
+
+		if tMax < tMin {
 			return false
 		}
 	}
 
 	return true
+}
+
+func AABBSortByAxis(lhs, rhs *AABB, axis constants.Axis) bool {
+	return lhs.AxisInterval(axis).Min < rhs.AxisInterval(axis).Min
 }

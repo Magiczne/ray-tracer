@@ -22,14 +22,6 @@ func EmptyHitRecord() *HitRecord {
 	}
 }
 
-func (hr *HitRecord) CopyFrom(another *HitRecord) {
-	hr.Point = another.Point
-	hr.Normal = another.Normal
-	hr.Material = another.Material
-	hr.T = another.T
-	hr.FrontFace = another.FrontFace
-}
-
 func (hr *HitRecord) SetFaceNormal(ray *Ray, outwardNormal *vector.Vector3) {
 	hr.FrontFace = vector.DotProduct(ray.Direction, outwardNormal) < 0
 

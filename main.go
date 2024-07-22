@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	smallSphereCoefficient := 3
+	smallSphereCoefficient := 5
 	world := core.EmptyHittableList()
 
 	// groundMaterial := material.NewLambertian(color.NewColor(0.8, 0.8, 0))
@@ -72,7 +72,7 @@ func main() {
 
 	// TODO: This is not working correctly
 	bvhWorld := core.EmptyHittableList()
-	bvhWorld.Add(bvh.NewBVHNodeFromHittableList(*world))
+	bvhWorld.Add(bvh.NewBVHNode(world.Objects()))
 
 	// world.Display()
 
@@ -87,7 +87,7 @@ func main() {
 	camera := core.NewCamera()
 	camera.AspectRatio = 16.0 / 9
 	camera.ImageWidth = 400     // 1200/400
-	camera.SamplesPerPixel = 10 // 500/100
+	camera.SamplesPerPixel = 10 // 500/10
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20
