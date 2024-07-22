@@ -81,11 +81,12 @@ func (aabb *AABB) Hit(ray *Ray, rayT *util.Interval) bool {
 	rayDirection := ray.Direction
 
 	for axis := range 3 {
-		axisInterval := aabb.AxisInterval(constants.Axis(axis))
-		adinv := 1.0 / rayDirection.Axis(constants.Axis(axis))
+		constantAxis := constants.Axis(axis)
+		axisInterval := aabb.AxisInterval(constantAxis)
+		directionAxisInverted := 1.0 / rayDirection.Axis(constantAxis)
 
-		t0 := (axisInterval.Min - rayOrigin.Axis(constants.Axis(axis))) * adinv
-		t1 := (axisInterval.Max - rayOrigin.Axis(constants.Axis(axis))) * adinv
+		t0 := (axisInterval.Min - rayOrigin.Axis(constantAxis)) * directionAxisInverted
+		t1 := (axisInterval.Max - rayOrigin.Axis(constantAxis)) * directionAxisInverted
 
 		if t0 < t1 {
 			if t0 > rayT.Min {
