@@ -27,7 +27,7 @@ func NewAABBFromIntervals(x, y, z *util.Interval) *AABB {
 	}
 }
 
-func NewAABBFromAABB(box1, box2 *AABB) *AABB {
+func SurroundingAABB(box1, box2 *AABB) *AABB {
 	return &AABB{
 		X: util.NewIntervalFromIntervals(box1.X, box2.X),
 		Y: util.NewIntervalFromIntervals(box1.Y, box2.Y),
@@ -99,6 +99,22 @@ func (aabb *AABB) Hit(ray *Ray, rayTime *util.Interval) bool {
 	}
 
 	return true
+}
+
+func (aabb *AABB) LongestAxis() constants.Axis {
+	if aabb.X.Size() > aabb.Y.Size() {
+		if aabb.X.Size() > aabb.Z.Size() {
+			return constants.AxisX
+		}
+
+		return constants.AxisZ
+	}
+
+	if aabb.Y.Size() > aabb.Z.Size() {
+		return constants.AxisY
+	}
+
+	return constants.AxisZ
 }
 
 func AABBSortByAxis(lhs, rhs *AABB, axis constants.Axis) bool {

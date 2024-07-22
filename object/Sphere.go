@@ -41,7 +41,7 @@ func NewMovingSphere(center1 *vector.Point3, center2 *vector.Point3, radius floa
 		Radius:       radius,
 		IsMoving:     true,
 		material:     material,
-		boundingBox:  core.NewAABBFromAABB(box1, box2),
+		boundingBox:  core.SurroundingAABB(box1, box2),
 	}
 }
 

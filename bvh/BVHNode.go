@@ -1,8 +1,6 @@
 package bvh
 
 import (
-	"math/rand"
-	"ray-tracer/constants"
 	"ray-tracer/core"
 	"ray-tracer/util"
 	"sort"
@@ -15,7 +13,12 @@ type BVHNode struct {
 }
 
 func NewBVHNode(objects []core.Hittable) *BVHNode {
-	axis := constants.Axis(rand.Int31n(3))
+	boundingBox := core.EmptyAABB()
+	for _, object := range objects {
+		boundingBox = core.SurroundingAABB(boundingBox, object.BoundingBox())
+	}
+
+	axis := boundingBox.LongestAxis()
 
 	sort.Slice(objects, func(i, j int) bool {
 		return core.AABBSortByAxis(objects[i].BoundingBox(), objects[j].BoundingBox(), axis)
@@ -36,7 +39,7 @@ func NewBVHNode(objects []core.Hittable) *BVHNode {
 	return &BVHNode{
 		left:        left,
 		right:       right,
-		boundingBox: core.NewAABBFromAABB(left.BoundingBox(), right.BoundingBox()),
+		boundingBox: core.SurroundingAABB(left.BoundingBox(), right.BoundingBox()),
 	}
 }
 

@@ -23,7 +23,7 @@ func (h *HittableList) Clear() {
 
 func (h *HittableList) Add(hittable Hittable) {
 	h.objects = append(h.objects, hittable)
-	h.boundingBox = NewAABBFromAABB(h.boundingBox, hittable.BoundingBox())
+	h.boundingBox = SurroundingAABB(h.boundingBox, hittable.BoundingBox())
 }
 
 func (h *HittableList) BoundingBox() *AABB {
