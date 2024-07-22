@@ -53,7 +53,7 @@ func (s *Sphere) Display() {
 	fmt.Printf("Sphere(c=%v, cv=%v, r=%f)", s.centerStart, s.CenterVector, s.Radius)
 }
 
-func (s *Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitRecord) bool {
+func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval, hitRecord *core.HitRecord) bool {
 	center := s.centerStart
 	if s.IsMoving {
 		center = s.Center(ray.Time)
@@ -74,10 +74,10 @@ func (s *Sphere) Hit(ray *core.Ray, rayT *util.Interval, hitRecord *core.HitReco
 	// Find the nearest root that lies in the acceptable range.
 	root := (h - discriminantSqrt) / a
 
-	if !rayT.Surrounds(root) {
+	if !rayTime.Surrounds(root) {
 		root = (h + discriminantSqrt) / a
 
-		if !rayT.Surrounds(root) {
+		if !rayTime.Surrounds(root) {
 			return false
 		}
 	}

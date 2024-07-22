@@ -34,13 +34,13 @@ func (h *HittableList) Objects() []Hittable {
 	return h.objects
 }
 
-func (h *HittableList) Hit(ray *Ray, rayT *util.Interval, hitRecord *HitRecord) bool {
+func (h *HittableList) Hit(ray *Ray, rayTime *util.Interval, hitRecord *HitRecord) bool {
 	tempRecord := NewHitRecord()
 	hitAnything := false
-	closestSoFar := rayT.Max
+	closestSoFar := rayTime.Max
 
 	for _, object := range h.objects {
-		if object.Hit(ray, util.NewInterval(rayT.Min, closestSoFar), tempRecord) {
+		if object.Hit(ray, util.NewInterval(rayTime.Min, closestSoFar), tempRecord) {
 			hitAnything = true
 			closestSoFar = tempRecord.T
 			hitRecord.CopyFrom(tempRecord)
