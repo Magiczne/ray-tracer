@@ -12,7 +12,7 @@ type HitRecord struct {
 	FrontFace bool
 }
 
-func NewHitRecord() *HitRecord {
+func EmptyHitRecord() *HitRecord {
 	return &HitRecord{
 		Point:     vector.NewPoint3(0, 0, 0),
 		Normal:    vector.EmptyVec3(),

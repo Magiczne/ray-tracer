@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	smallSphereCoefficient := 1
+	smallSphereCoefficient := 3
 	world := core.EmptyHittableList()
 
 	// groundMaterial := material.NewLambertian(color.NewColor(0.8, 0.8, 0))
@@ -86,13 +86,13 @@ func main() {
 	// Camera
 	camera := core.NewCamera()
 	camera.AspectRatio = 16.0 / 9
-	camera.ImageWidth = 200     // 1200/400
-	camera.SamplesPerPixel = 10 // 500/101
+	camera.ImageWidth = 400     // 1200/400
+	camera.SamplesPerPixel = 10 // 500/100
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20
-	// camera.LookFrom = vector.NewPoint3(13, 2, 3)
-	camera.LookFrom = vector.NewPoint3(1, 15, 1)
+	camera.LookFrom = vector.NewPoint3(13, 2, 3)
+	// camera.LookFrom = vector.NewPoint3(1, 15, 1)
 	camera.LookAt = vector.NewPoint3(0, 0, 0)
 	camera.VectorUp = vector.NewVector3(0, 1, 0)
 

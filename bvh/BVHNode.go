@@ -62,22 +62,29 @@ func (node *BVHNode) BoundingBox() *core.AABB {
 	return node.boundingBox
 }
 
-func (node *BVHNode) Hit(ray *core.Ray, rayTime *util.Interval, hitRecord *core.HitRecord) bool {
+func (node *BVHNode) Hit(ray *core.Ray, rayTime *util.Interval) *core.HitRecord {
 	if !node.boundingBox.Hit(ray, rayTime) {
-		return false
+		return nil
 	}
 
-	hitLeft := node.left.Hit(ray, rayTime, hitRecord)
-	hitRight := node.right.Hit(ray, util.NewInterval(
-		rayTime.Min,
-		func() float64 {
-			if hitLeft {
-				return hitRecord.T
-			}
+	hitRecordLeft := node.left.Hit(ray, rayTime)
+	hitRecordRight := node.right.Hit(ray, rayTime)
 
-			return rayTime.Max
-		}(),
-	), hitRecord)
+	if hitRecordLeft != nil && hitRecordRight != nil {
+		if hitRecordLeft.T < hitRecordRight.T {
+			return hitRecordLeft
+		}
 
-	return hitLeft || hitRight
+		return hitRecordRight
+	}
+
+	if hitRecordLeft != nil {
+		return hitRecordLeft
+	}
+
+	if hitRecordRight != nil {
+		return hitRecordRight
+	}
+
+	return nil
 }

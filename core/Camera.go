@@ -141,9 +141,9 @@ func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 		return color.NewColor(0, 0, 0)
 	}
 
-	hitRecord := NewHitRecord()
+	hitRecord := world.Hit(ray, util.NewInterval(0.001, math.Inf(1)))
 
-	if world.Hit(ray, util.NewInterval(0.001, math.Inf(1)), hitRecord) {
+	if hitRecord != nil {
 		scattered := EmptyRay()
 		attenuation := color.Black()
 

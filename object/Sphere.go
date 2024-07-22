@@ -53,7 +53,7 @@ func (s *Sphere) Display() {
 	fmt.Printf("Sphere(c=%v, cv=%v, r=%f)", s.centerStart, s.CenterVector, s.Radius)
 }
 
-func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval, hitRecord *core.HitRecord) bool {
+func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval) *core.HitRecord {
 	center := s.centerStart
 	if s.IsMoving {
 		center = s.Center(ray.Time)
@@ -66,7 +66,7 @@ func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval, hitRecord *core.HitR
 	discriminant := h*h - a*c
 
 	if discriminant < 0 {
-		return false
+		return nil
 	}
 
 	discriminantSqrt := math.Sqrt(discriminant)
@@ -78,10 +78,11 @@ func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval, hitRecord *core.HitR
 		root = (h + discriminantSqrt) / a
 
 		if !rayTime.Surrounds(root) {
-			return false
+			return nil
 		}
 	}
 
+	hitRecord := core.EmptyHitRecord()
 	hitRecord.T = root
 	hitRecord.Point = ray.At(hitRecord.T)
 
@@ -89,7 +90,7 @@ func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval, hitRecord *core.HitR
 	hitRecord.SetFaceNormal(ray, outwardNormal)
 	hitRecord.Material = s.material
 
-	return true
+	return hitRecord
 }
 
 func (s *Sphere) Center(time float64) *vector.Point3 {

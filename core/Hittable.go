@@ -6,5 +6,5 @@ import (
 
 type Hittable interface {
 	BoundingBox() *AABB
-	Hit(ray *Ray, rayTime *util.Interval, hitRecord *HitRecord) bool
+	Hit(ray *Ray, rayTime *util.Interval) *HitRecord
 }
