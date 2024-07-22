@@ -3,6 +3,7 @@ package main
 import (
 	"math/rand"
 	"os"
+	"ray-tracer/bvh"
 	"ray-tracer/color"
 	"ray-tracer/core"
 	"ray-tracer/material"
@@ -13,6 +14,7 @@ import (
 )
 
 func main() {
+	smallSphereCoefficient := 1
 	world := core.EmptyHittableList()
 
 	// groundMaterial := material.NewLambertian(color.NewColor(0.8, 0.8, 0))
@@ -30,8 +32,8 @@ func main() {
 	groundMaterial := material.NewLambertian(color.NewColor(0.5, 0.5, 0.5))
 	world.Add(object.NewSphere(vector.NewPoint3(0, -1000, 0), 1000, groundMaterial))
 
-	for a := -11; a < 11; a++ {
-		for b := -11; b < 11; b++ {
+	for a := -smallSphereCoefficient; a < smallSphereCoefficient; a++ {
+		for b := -smallSphereCoefficient; b < smallSphereCoefficient; b++ {
 			chooseMat := rand.Float64()
 			center := vector.NewPoint3(float64(a)+0.9*rand.Float64(), 0.2, float64(b)+0.9*rand.Float64())
 
@@ -68,6 +70,10 @@ func main() {
 	material3 := material.NewMetal(color.NewColor(0.7, 0.6, 0.5), 0.0)
 	world.Add(object.NewSphere(vector.NewPoint3(4, 1, 0), 1.0, material3))
 
+	// TODO: This is not working correctly
+	bvhWorld := core.EmptyHittableList()
+	bvhWorld.Add(bvh.NewBVHNodeFromHittableList(*world))
+
 	// world.Display()
 
 	// Writer
@@ -85,7 +91,8 @@ func main() {
 	camera.MaxDepth = 50
 
 	camera.VerticalFieldOfView = 20
-	camera.LookFrom = vector.NewPoint3(13, 2, 3)
+	// camera.LookFrom = vector.NewPoint3(13, 2, 3)
+	camera.LookFrom = vector.NewPoint3(1, 15, 1)
 	camera.LookAt = vector.NewPoint3(0, 0, 0)
 	camera.VectorUp = vector.NewVector3(0, 1, 0)
 
