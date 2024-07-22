@@ -3,16 +3,23 @@ package material
 import (
 	"ray-tracer/color"
 	"ray-tracer/core"
+	"ray-tracer/texture"
 	"ray-tracer/vector"
 )
 
 type Lambertian struct {
-	albedo *color.Color
+	texture core.Texture
 }
 
 func NewLambertian(albedo *color.Color) *Lambertian {
 	return &Lambertian{
-		albedo: albedo,
+		texture: texture.NewSolidColor(albedo),
+	}
+}
+
+func NewTexturedLambertian(texture core.Texture) *Lambertian {
+	return &Lambertian{
+		texture: texture,
 	}
 }
 
@@ -25,7 +32,7 @@ func (l *Lambertian) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenua
 	}
 
 	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, scatterDirection, rayIn.Time))
-	attenuation.CopyFrom(l.albedo)
+	attenuation.CopyFrom(l.texture.Value(hitRecord.U, hitRecord.V, hitRecord.Point))
 
 	return true
 }

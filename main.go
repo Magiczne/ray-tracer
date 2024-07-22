@@ -9,6 +9,7 @@ import (
 	"ray-tracer/material"
 	"ray-tracer/object"
 	"ray-tracer/random"
+	"ray-tracer/texture"
 	"ray-tracer/vector"
 	"ray-tracer/writer"
 )
@@ -29,7 +30,8 @@ func main() {
 	// world.Add(object.NewSphere(vector.NewPoint3(-1.0, 0.0, -1.0), 0.4, bubbleMaterial))
 	// world.Add(object.NewSphere(vector.NewPoint3(1.0, 0.0, -1.0), 0.5, rightMaterial))
 
-	groundMaterial := material.NewLambertian(color.NewColor(0.5, 0.5, 0.5))
+	groundTexture := texture.NewColoredChecker(0.32, color.NewColor(0.2, 0.3, 0.1), color.NewColor(0.9, 0.9, 0.9))
+	groundMaterial := material.NewTexturedLambertian(groundTexture)
 	world.Add(object.NewSphere(vector.NewPoint3(0, -1000, 0), 1000, groundMaterial))
 
 	for a := -smallSphereCoefficient; a < smallSphereCoefficient; a++ {
