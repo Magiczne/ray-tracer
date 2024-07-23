@@ -88,6 +88,7 @@ func (s *Sphere) Hit(ray *core.Ray, rayTime *util.Interval) *core.HitRecord {
 
 	outwardNormal := hitRecord.Point.Substract(center).Divide(s.Radius)
 	hitRecord.SetFaceNormal(ray, outwardNormal)
+	hitRecord.U, hitRecord.V = GetSphereUV(outwardNormal)
 	hitRecord.Material = s.material
 
 	return hitRecord
