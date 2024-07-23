@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	switch 4 {
+	switch 5 {
 	case 1:
 		materialTester()
 		break
@@ -31,6 +31,9 @@ func main() {
 	case 4:
 		earth()
 		break
+
+	case 5:
+		perlinSpheres()
 	}
 }
 
@@ -209,6 +212,34 @@ func earth() {
 
 	camera.VerticalFieldOfView = 20
 	camera.LookFrom = vector.NewPoint3(0, 0, 12)
+	camera.LookAt = vector.NewPoint3(0, 0, 0)
+	camera.VectorUp = vector.NewVector3(0, 1, 0)
+
+	camera.DefocusAngle = 0
+	camera.FocusDistance = 10
+
+	camera.Render(world, writer)
+}
+
+func perlinSpheres() {
+	world := core.EmptyHittableList()
+
+	noiseTexture := texture.NewNoise()
+	noiseMaterial := material.NewTexturedLambertian(noiseTexture)
+	world.Add(object.NewSphere(vector.NewPoint3(0, -1000, 0), 1000, noiseMaterial))
+	world.Add(object.NewSphere(vector.NewPoint3(0, 2, 0), 2, noiseMaterial))
+
+	writer := writer.NewWriter(os.Args[1])
+
+	// Camera
+	camera := core.NewCamera()
+	camera.AspectRatio = 16.0 / 9
+	camera.ImageWidth = 400
+	camera.SamplesPerPixel = 100
+	camera.MaxDepth = 50
+
+	camera.VerticalFieldOfView = 20
+	camera.LookFrom = vector.NewPoint3(13, 2, 3)
 	camera.LookAt = vector.NewPoint3(0, 0, 0)
 	camera.VectorUp = vector.NewVector3(0, 1, 0)
 
