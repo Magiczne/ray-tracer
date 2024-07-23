@@ -9,20 +9,20 @@ import (
 const pointCount = 256
 
 type Perlin struct {
-	randomFloat   []float64
+	randomVectors []*vector.Vector3
 	permutationsX []int
 	permutationsY []int
 	permutationsZ []int
 }
 
 func NewPerlin() *Perlin {
-	randomFloat := make([]float64, pointCount)
+	randomVectors := make([]*vector.Vector3, pointCount)
 	for i := 0; i < pointCount; i++ {
-		randomFloat[i] = rand.Float64()
+		randomVectors[i] = vector.UnitVector(vector.RandomVector3(-1, 1))
 	}
 
 	return &Perlin{
-		randomFloat:   randomFloat,
+		randomVectors: randomVectors,
 		permutationsX: generatePerlinPermutation(),
 		permutationsY: generatePerlinPermutation(),
 		permutationsZ: generatePerlinPermutation(),
@@ -34,25 +34,20 @@ func (p *Perlin) Noise(point *vector.Point3) float64 {
 	v := point.Y() - math.Floor(point.Y())
 	w := point.Z() - math.Floor(point.Z())
 
-	// Hermitian smoothing
-	u = u * u * (3 - 2*u)
-	v = v * v * (3 - 2*v)
-	w = w * w * (3 - 2*w)
-
 	i := int(math.Floor(point.X()))
 	j := int(math.Floor(point.Y()))
 	k := int(math.Floor(point.Z()))
-	c := [2][2][2]float64{}
+	c := [2][2][2]*vector.Vector3{}
 
 	for di := range 2 {
 		for dj := range 2 {
 			for dk := range 2 {
-				c[di][dj][dk] = p.randomFloat[p.permutationsX[(i+di)&255]^p.permutationsY[(j+dj)&255]^p.permutationsZ[(k+dk)&255]]
+				c[di][dj][dk] = p.randomVectors[p.permutationsX[(i+di)&255]^p.permutationsY[(j+dj)&255]^p.permutationsZ[(k+dk)&255]]
 			}
 		}
 	}
 
-	return trilinearInterpolation(c, u, v, w)
+	return perlinInterpolation(c, u, v, w)
 }
 
 func generatePerlinPermutation() []int {
@@ -72,13 +67,21 @@ func generatePerlinPermutation() []int {
 	return p
 }
 
-func trilinearInterpolation(c [2][2][2]float64, u, v, w float64) float64 {
+func perlinInterpolation(c [2][2][2]*vector.Vector3, u, v, w float64) float64 {
+	uu := u * u * (3 - 2*u)
+	vv := v * v * (3 - 2*v)
+	ww := w * w * (3 - 2*w)
 	sum := 0.0
 
 	for i := range 2 {
 		for j := range 2 {
 			for k := range 2 {
-				sum += (float64(i)*u + float64(1-i)*(1-u)) * (float64(j)*v + float64(1-j)*(1-v)) * (float64(k)*w + float64(1-k)*(1-w)) * c[i][j][k]
+				weightVector := vector.NewVector3(u-float64(i), v-float64(j), w-float64(k))
+
+				sum += (float64(i)*uu + float64(1-i)*(1-uu)) *
+					(float64(j)*vv + float64(1-j)*(1-vv)) *
+					(float64(k)*ww + float64(1-k)*(1-ww)) *
+					vector.DotProduct(c[i][j][k], weightVector)
 			}
 		}
 	}

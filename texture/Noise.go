@@ -19,5 +19,6 @@ func NewNoise(scale float64) *Noise {
 }
 
 func (n *Noise) Value(u, v float64, point *vector.Point3) *color.Color {
-	return color.White().MultiplyBy(n.perlin.Noise(point.MultiplyBy(n.scale)))
+	// Perlin interpolation can return [-1, 1], we need to map that to [0, 1]
+	return color.White().MultiplyBy(0.5).MultiplyBy(n.perlin.Noise(point.MultiplyBy(n.scale)) + 1)
 }
