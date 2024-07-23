@@ -1,6 +1,7 @@
 package perlin
 
 import (
+	"math"
 	"math/rand"
 	"ray-tracer/vector"
 )
@@ -29,11 +30,24 @@ func NewPerlin() *Perlin {
 }
 
 func (p *Perlin) Noise(point *vector.Point3) float64 {
-	i := int(4*point.X()) & 255
-	j := int(4*point.Y()) & 255
-	k := int(4*point.Z()) & 255
+	u := point.X() - math.Floor(point.X())
+	v := point.Y() - math.Floor(point.Y())
+	w := point.Z() - math.Floor(point.Z())
 
-	return p.randomFloat[p.permutationsX[i]^p.permutationsY[j]^p.permutationsZ[k]]
+	i := int(math.Floor(point.X()))
+	j := int(math.Floor(point.Y()))
+	k := int(math.Floor(point.Z()))
+	c := [2][2][2]float64{}
+
+	for di := range 2 {
+		for dj := range 2 {
+			for dk := range 2 {
+				c[di][dj][dk] = p.randomFloat[p.permutationsX[(i+di)&255]^p.permutationsY[(j+dj)&255]^p.permutationsZ[(k+dk)&255]]
+			}
+		}
+	}
+
+	return trilinearInterpolation(c, u, v, w)
 }
 
 func generatePerlinPermutation() []int {
@@ -51,4 +65,18 @@ func generatePerlinPermutation() []int {
 	}
 
 	return p
+}
+
+func trilinearInterpolation(c [2][2][2]float64, u, v, w float64) float64 {
+	sum := 0.0
+
+	for i := range 2 {
+		for j := range 2 {
+			for k := range 2 {
+				sum += (float64(i)*u + float64(1-i)*(1-u)) * (float64(j)*v + float64(1-j)*(1-v)) * (float64(k)*w + float64(1-k)*(1-w)) * c[i][j][k]
+			}
+		}
+	}
+
+	return sum
 }
