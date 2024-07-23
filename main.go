@@ -224,7 +224,7 @@ func earth() {
 func perlinSpheres() {
 	world := core.EmptyHittableList()
 
-	noiseTexture := texture.NewNoise()
+	noiseTexture := texture.NewNoise(4)
 	noiseMaterial := material.NewTexturedLambertian(noiseTexture)
 	world.Add(object.NewSphere(vector.NewPoint3(0, -1000, 0), 1000, noiseMaterial))
 	world.Add(object.NewSphere(vector.NewPoint3(0, 2, 0), 2, noiseMaterial))
