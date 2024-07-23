@@ -1,6 +1,7 @@
 package texture
 
 import (
+	"math"
 	"ray-tracer/color"
 	"ray-tracer/perlin"
 	"ray-tracer/vector"
@@ -23,5 +24,10 @@ func (n *Noise) Value(u, v float64, point *vector.Point3) *color.Color {
 	// return color.White().MultiplyBy(0.5).MultiplyBy(n.perlin.Noise(point.MultiplyBy(n.scale)) + 1)
 
 	// Turbulence
-	return color.White().MultiplyBy(n.perlin.Turbulence(point, 7))
+	// return color.White().MultiplyBy(n.perlin.Turbulence(point, 7))
+
+	// Marble-like
+	return color.NewColor(0.5, 0.5, 0.5).MultiplyBy(
+		1 + math.Sin(n.scale*point.Z()+10*n.perlin.Turbulence(point, 7)),
+	)
 }
