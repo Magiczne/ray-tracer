@@ -34,6 +34,11 @@ func (p *Perlin) Noise(point *vector.Point3) float64 {
 	v := point.Y() - math.Floor(point.Y())
 	w := point.Z() - math.Floor(point.Z())
 
+	// Hermitian smoothing
+	u = u * u * (3 - 2*u)
+	v = v * v * (3 - 2*v)
+	w = w * w * (3 - 2*w)
+
 	i := int(math.Floor(point.X()))
 	j := int(math.Floor(point.Y()))
 	k := int(math.Floor(point.Z()))
