@@ -50,6 +50,20 @@ func (p *Perlin) Noise(point *vector.Point3) float64 {
 	return perlinInterpolation(c, u, v, w)
 }
 
+func (p *Perlin) Turbulence(point *vector.Point3, depth int) float64 {
+	sum := 0.0
+	tempPoint := point
+	weight := 1.0
+
+	for _ = range depth {
+		sum += weight * p.Noise(tempPoint)
+		weight *= 0.5
+		tempPoint = tempPoint.MultiplyBy(2)
+	}
+
+	return math.Abs(sum)
+}
+
 func generatePerlinPermutation() []int {
 	p := make([]int, pointCount)
 
