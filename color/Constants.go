@@ -19,3 +19,7 @@ func Green() *Color {
 func Blue() *Color {
 	return &Color{0, 0, 1.0}
 }
+
+func Cyan() *Color {
+	return &Color{0, 1.0, 1.0}
+}

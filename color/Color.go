@@ -7,7 +7,7 @@ import (
 var intensity = util.NewInterval(0.0, 0.999)
 
 type Color struct {
-	r, g, b float64
+	R, G, B float64
 }
 
 func NewColor(r float64, g float64, b float64) *Color {
@@ -15,15 +15,15 @@ func NewColor(r float64, g float64, b float64) *Color {
 }
 
 func (c *Color) CopyFrom(other *Color) {
-	c.r = other.r
-	c.g = other.g
-	c.b = other.b
+	c.R = other.R
+	c.G = other.G
+	c.B = other.B
 }
 
 func (c *Color) ToRgbBytes() (int, int, int) {
-	r := util.LinearToGamma(c.r)
-	g := util.LinearToGamma(c.g)
-	b := util.LinearToGamma(c.b)
+	r := util.LinearToGamma(c.R)
+	g := util.LinearToGamma(c.G)
+	b := util.LinearToGamma(c.B)
 
 	rByte := int(256 * intensity.Clamp(r))
 	gByte := int(256 * intensity.Clamp(g))
@@ -33,19 +33,19 @@ func (c *Color) ToRgbBytes() (int, int, int) {
 }
 
 func (c *Color) Add(other *Color) *Color {
-	return NewColor(c.r+other.r, c.g+other.g, c.b+other.b)
+	return NewColor(c.R+other.R, c.G+other.G, c.B+other.B)
 }
 
 func (c *Color) Multiply(other *Color) *Color {
-	return NewColor(c.r*other.r, c.g*other.g, c.b*other.b)
+	return NewColor(c.R*other.R, c.G*other.G, c.B*other.B)
 }
 
 func (c *Color) AddInPlace(other *Color) {
-	c.r += other.r
-	c.g += other.g
-	c.b += other.b
+	c.R += other.R
+	c.G += other.G
+	c.B += other.B
 }
 
 func (c *Color) MultiplyBy(multiplier float64) *Color {
-	return NewColor(c.r*multiplier, c.g*multiplier, c.b*multiplier)
+	return NewColor(c.R*multiplier, c.G*multiplier, c.B*multiplier)
 }
