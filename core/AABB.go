@@ -20,11 +20,15 @@ func EmptyAABB() *AABB {
 }
 
 func NewAABBFromIntervals(x, y, z *util.Interval) *AABB {
-	return &AABB{
+	aabb := &AABB{
 		X: x,
 		Y: y,
 		Z: z,
 	}
+
+	aabb.padToMinimums()
+
+	return aabb
 }
 
 func SurroundingAABB(box1, box2 *AABB) *AABB {
@@ -58,11 +62,15 @@ func NewAABBFromPoints(a, b *vector.Point3) *AABB {
 		z = util.NewInterval(b.Z(), a.Z())
 	}
 
-	return &AABB{
+	aabb := &AABB{
 		X: x,
 		Y: y,
 		Z: z,
 	}
+
+	aabb.padToMinimums()
+
+	return aabb
 }
 
 func (aabb *AABB) AxisInterval(axis constants.Axis) *util.Interval {
@@ -115,6 +123,23 @@ func (aabb *AABB) LongestAxis() constants.Axis {
 	}
 
 	return constants.AxisZ
+}
+
+func (aabb *AABB) padToMinimums() {
+	// Adjust the AABB so that no side is narrower than some delta, padding if necessary.
+	delta := 0.0001
+
+	if aabb.X.Size() < delta {
+		aabb.X = aabb.X.Expand(delta)
+	}
+
+	if aabb.Y.Size() < delta {
+		aabb.Y = aabb.Y.Expand(delta)
+	}
+
+	if aabb.Z.Size() < delta {
+		aabb.Z = aabb.Z.Expand(delta)
+	}
 }
 
 func AABBSortByAxis(lhs, rhs *AABB, axis constants.Axis) bool {

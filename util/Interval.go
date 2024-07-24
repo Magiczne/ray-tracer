@@ -55,11 +55,11 @@ func (i *Interval) Size() float64 {
 }
 
 func (i *Interval) Contains(x float64) bool {
-	return i.Min <= x && x <= i.Max
+	return x >= i.Min && x <= i.Max
 }
 
 func (i *Interval) Surrounds(x float64) bool {
-	return i.Min < x && x < i.Max
+	return x > i.Min && x < i.Max
 }
 
 func (i *Interval) Clamp(x float64) float64 {
