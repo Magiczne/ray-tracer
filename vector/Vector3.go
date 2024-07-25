@@ -72,11 +72,11 @@ func (vec3 *Vector3) MultiplyBy(multiplier float64) *Vector3 {
 }
 
 func (vec3 *Vector3) Divide(divisor float64) *Vector3 {
-	return vec3.MultiplyBy(1 / divisor)
+	return vec3.MultiplyBy(1.0 / divisor)
 }
 
 func (vec3 *Vector3) NearZero() bool {
 	epsilon := 1e-8
 
-	return (math.Abs(vec3.X) < epsilon) && (math.Abs(vec3.Y) < epsilon) && (math.Abs(vec3.Z) < epsilon)
+	return math.Abs(vec3.X) < epsilon && math.Abs(vec3.Y) < epsilon && math.Abs(vec3.Z) < epsilon
 }

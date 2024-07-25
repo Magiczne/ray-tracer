@@ -19,7 +19,8 @@ type Quad struct {
 }
 
 func NewQuad(q *vector.Point3, u, v *vector.Vector3, material core.Material) *Quad {
-	normal := vector.UnitVector(vector.CrossProduct(u, v))
+	normalVector := vector.CrossProduct(u, v)
+	normal := vector.UnitVector(normalVector)
 	D := vector.DotProduct(normal, q)
 
 	boundingBoxDiagonal1 := core.NewAABBFromPoints(q, q.Add(u).Add(v))
@@ -29,7 +30,7 @@ func NewQuad(q *vector.Point3, u, v *vector.Vector3, material core.Material) *Qu
 		Q:           q,
 		u:           u,
 		v:           v,
-		w:           normal.Divide(vector.DotProduct(normal, normal)),
+		w:           normalVector.Divide(vector.DotProduct(normalVector, normalVector)),
 		normal:      normal,
 		D:           D,
 		material:    material,
