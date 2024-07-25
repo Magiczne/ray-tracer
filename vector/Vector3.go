@@ -7,7 +7,7 @@ import (
 )
 
 type Vector3 struct {
-	x, y, z float64
+	X, Y, Z float64
 }
 
 func EmptyVec3() *Vector3 {
@@ -19,33 +19,21 @@ func NewVector3(x float64, y float64, z float64) *Vector3 {
 }
 
 func (vec3 *Vector3) CopyFrom(other *Vector3) {
-	vec3.x = other.x
-	vec3.y = other.y
-	vec3.z = other.z
-}
-
-func (vec3 *Vector3) X() float64 {
-	return vec3.x
-}
-
-func (vec3 *Vector3) Y() float64 {
-	return vec3.y
-}
-
-func (vec3 *Vector3) Z() float64 {
-	return vec3.z
+	vec3.X = other.X
+	vec3.Y = other.Y
+	vec3.Z = other.Z
 }
 
 func (vec3 *Vector3) Axis(axis constants.Axis) float64 {
 	if axis == constants.AxisX {
-		return vec3.x
+		return vec3.X
 	}
 
 	if axis == constants.AxisY {
-		return vec3.y
+		return vec3.Y
 	}
 
-	return vec3.z
+	return vec3.Z
 }
 
 func (vec3 *Vector3) Length() float64 {
@@ -53,34 +41,34 @@ func (vec3 *Vector3) Length() float64 {
 }
 
 func (vec3 *Vector3) LengthSquared() float64 {
-	return vec3.x*vec3.x + vec3.y*vec3.y + vec3.z*vec3.z
+	return vec3.X*vec3.X + vec3.Y*vec3.Y + vec3.Z*vec3.Z
 }
 
 func (vec3 *Vector3) String() string {
-	return fmt.Sprintf("%f, %f, %f", vec3.x, vec3.y, vec3.z)
+	return fmt.Sprintf("%f, %f, %f", vec3.X, vec3.Y, vec3.Z)
 }
 
 // Vector utility functions
 func (vec3 *Vector3) Add(other *Vector3) *Vector3 {
-	return NewVector3(vec3.x+other.x, vec3.y+other.y, vec3.z+other.z)
+	return NewVector3(vec3.X+other.X, vec3.Y+other.Y, vec3.Z+other.Z)
 }
 
 func (vec3 *Vector3) AddInPlace(other *Vector3) {
-	vec3.x += other.x
-	vec3.y += other.y
-	vec3.z += other.z
+	vec3.X += other.X
+	vec3.Y += other.Y
+	vec3.Z += other.Z
 }
 
 func (vec3 *Vector3) Substract(other *Vector3) *Vector3 {
-	return NewVector3(vec3.x-other.x, vec3.y-other.y, vec3.z-other.z)
+	return NewVector3(vec3.X-other.X, vec3.Y-other.Y, vec3.Z-other.Z)
 }
 
 func (vec3 *Vector3) Multiply(other *Vector3) *Vector3 {
-	return NewVector3(vec3.x*other.x, vec3.y*other.y, vec3.z*other.z)
+	return NewVector3(vec3.X*other.X, vec3.Y*other.Y, vec3.Z*other.Z)
 }
 
 func (vec3 *Vector3) MultiplyBy(multiplier float64) *Vector3 {
-	return NewVector3(vec3.x*multiplier, vec3.y*multiplier, vec3.z*multiplier)
+	return NewVector3(vec3.X*multiplier, vec3.Y*multiplier, vec3.Z*multiplier)
 }
 
 func (vec3 *Vector3) Divide(divisor float64) *Vector3 {
@@ -90,5 +78,5 @@ func (vec3 *Vector3) Divide(divisor float64) *Vector3 {
 func (vec3 *Vector3) NearZero() bool {
 	epsilon := 1e-8
 
-	return (math.Abs(vec3.x) < epsilon) && (math.Abs(vec3.y) < epsilon) && (math.Abs(vec3.z) < epsilon)
+	return (math.Abs(vec3.X) < epsilon) && (math.Abs(vec3.Y) < epsilon) && (math.Abs(vec3.Z) < epsilon)
 }

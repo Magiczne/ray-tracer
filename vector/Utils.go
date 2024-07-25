@@ -3,14 +3,14 @@ package vector
 import "math"
 
 func DotProduct(v1, v2 *Vector3) float64 {
-	return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
+	return v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z
 }
 
 func CrossProduct(v1, v2 *Vector3) *Vector3 {
 	return NewVector3(
-		v1.y*v2.z-v1.z*v2.y,
-		v1.z*v2.x-v1.x*v2.z,
-		v1.x*v2.y-v1.y*v2.x,
+		v1.Y*v2.Z-v1.Z*v2.Y,
+		v1.Z*v2.X-v1.X*v2.Z,
+		v1.X*v2.Y-v1.Y*v2.X,
 	)
 }
 

@@ -28,6 +28,6 @@ func (n *Noise) Value(u, v float64, point *vector.Point3) *color.Color {
 
 	// Marble-like
 	return color.NewColor(0.5, 0.5, 0.5).MultiplyBy(
-		1 + math.Sin(n.scale*point.Z()+10*n.perlin.Turbulence(point, 7)),
+		1 + math.Sin(n.scale*point.Z+10*n.perlin.Turbulence(point, 7)),
 	)
 }

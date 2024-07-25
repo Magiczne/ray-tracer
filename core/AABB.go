@@ -44,22 +44,22 @@ func SurroundingAABB(box1, box2 *AABB) *AABB {
 func NewAABBFromPoints(a, b *vector.Point3) *AABB {
 	var x, y, z *util.Interval
 
-	if a.X() <= b.X() {
-		x = util.NewInterval(a.X(), b.X())
+	if a.X <= b.X {
+		x = util.NewInterval(a.X, b.X)
 	} else {
-		x = util.NewInterval(b.X(), a.X())
+		x = util.NewInterval(b.X, a.X)
 	}
 
-	if a.Y() <= b.Y() {
-		y = util.NewInterval(a.Y(), b.Y())
+	if a.Y <= b.Y {
+		y = util.NewInterval(a.Y, b.Y)
 	} else {
-		y = util.NewInterval(b.Y(), a.Y())
+		y = util.NewInterval(b.Y, a.Y)
 	}
 
-	if a.Z() <= b.Z() {
-		z = util.NewInterval(a.Z(), b.Z())
+	if a.Z <= b.Z {
+		z = util.NewInterval(a.Z, b.Z)
 	} else {
-		z = util.NewInterval(b.Z(), a.Z())
+		z = util.NewInterval(b.Z, a.Z)
 	}
 
 	aabb := &AABB{

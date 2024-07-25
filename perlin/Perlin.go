@@ -30,13 +30,13 @@ func NewPerlin() *Perlin {
 }
 
 func (p *Perlin) Noise(point *vector.Point3) float64 {
-	u := point.X() - math.Floor(point.X())
-	v := point.Y() - math.Floor(point.Y())
-	w := point.Z() - math.Floor(point.Z())
+	u := point.X - math.Floor(point.X)
+	v := point.Y - math.Floor(point.Y)
+	w := point.Z - math.Floor(point.Z)
 
-	i := int(math.Floor(point.X()))
-	j := int(math.Floor(point.Y()))
-	k := int(math.Floor(point.Z()))
+	i := int(math.Floor(point.X))
+	j := int(math.Floor(point.Y))
+	k := int(math.Floor(point.Z))
 	c := [2][2][2]*vector.Vector3{}
 
 	for di := range 2 {

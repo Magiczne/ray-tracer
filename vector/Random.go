@@ -4,9 +4,9 @@ import "ray-tracer/random"
 
 func RandomVector3(min float64, max float64) *Vector3 {
 	return &Vector3{
-		x: random.Float64(min, max),
-		y: random.Float64(min, max),
-		z: random.Float64(min, max),
+		X: random.Float64(min, max),
+		Y: random.Float64(min, max),
+		Z: random.Float64(min, max),
 	}
 }
 

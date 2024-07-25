@@ -30,9 +30,9 @@ func NewColoredChecker(scale float64, color1, color2 *color.Color) *Checker {
 }
 
 func (c *Checker) Value(u, v float64, point *vector.Point3) *color.Color {
-	xInt := int(math.Floor(c.invertedScale * point.X()))
-	yInt := int(math.Floor(c.invertedScale * point.Y()))
-	zInt := int(math.Floor(c.invertedScale * point.Z()))
+	xInt := int(math.Floor(c.invertedScale * point.X))
+	yInt := int(math.Floor(c.invertedScale * point.Y))
+	zInt := int(math.Floor(c.invertedScale * point.Z))
 	isEven := (xInt+yInt+zInt)%2 == 0
 
 	if isEven {

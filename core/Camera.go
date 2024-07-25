@@ -120,7 +120,7 @@ func (c *Camera) initialize() {
 func (c *Camera) getRay(i int, j int) *Ray {
 	offset := c.sampleSquare()
 
-	pixelSample := c.pixel00Location.Add(c.pixelDeltaU.MultiplyBy(float64(i) + offset.X())).Add(c.pixelDeltaV.MultiplyBy(float64(j) + offset.Y()))
+	pixelSample := c.pixel00Location.Add(c.pixelDeltaU.MultiplyBy(float64(i) + offset.X)).Add(c.pixelDeltaV.MultiplyBy(float64(j) + offset.Y))
 
 	rayOrigin := c.center
 	if c.DefocusAngle > 0 {
@@ -155,7 +155,7 @@ func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 	}
 
 	unitDirection := vector.UnitVector(ray.Direction)
-	a := 0.5 * (unitDirection.Y() + 1.0)
+	a := 0.5 * (unitDirection.Y + 1.0)
 
 	return color.NewColor(1, 1, 1).MultiplyBy(1.0 - a).Add(color.NewColor(0.5, 0.7, 1.0).MultiplyBy(a))
 }
@@ -171,5 +171,5 @@ func (c *Camera) sampleSquare() *vector.Vector3 {
 func (c *Camera) defocusDiskSample() *vector.Point3 {
 	p := vector.RandomVector3InUnitDisk()
 
-	return c.center.Add(c.defocusDiskU.MultiplyBy(p.X())).Add(c.defocusDiskV.MultiplyBy(p.Y()))
+	return c.center.Add(c.defocusDiskU.MultiplyBy(p.X)).Add(c.defocusDiskV.MultiplyBy(p.Y))
 }
