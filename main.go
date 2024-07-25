@@ -264,7 +264,7 @@ func quads() {
 	lowerTeal := material.NewLambertian(color.NewColor(0.2, 0.8, 0.8))
 
 	world.Add(object.NewQuad(vector.NewPoint3(-3, -2, 5), vector.NewVector3(0, 0, -4), vector.NewVector3(0, 4, 0), leftRed))
-	world.Add(object.NewQuad(vector.NewPoint3(-2, -2, 0), vector.NewVector3(4, 0, 0), vector.NewVector3(0, 4, 0), backGreen))
+	world.Add(object.NewTriangle(vector.NewPoint3(-2, -2, 0), vector.NewVector3(4, 0, 0), vector.NewVector3(0, 4, 0), backGreen))
 	world.Add(object.NewQuad(vector.NewPoint3(3, -2, 1), vector.NewVector3(0, 0, 4), vector.NewVector3(0, 4, 0), rightBlue))
 	world.Add(object.NewQuad(vector.NewPoint3(-2, 3, 1), vector.NewVector3(4, 0, 0), vector.NewVector3(0, 0, 4), upperOrange))
 	world.Add(object.NewQuad(vector.NewPoint3(-2, -3, 5), vector.NewVector3(4, 0, 0), vector.NewVector3(0, 0, -4), lowerTeal))
