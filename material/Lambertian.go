@@ -23,6 +23,10 @@ func NewTexturedLambertian(texture core.Texture) *Lambertian {
 	}
 }
 
+func (l *Lambertian) Emitted(u, v float64, point *vector.Point3) *color.Color {
+	return color.Black()
+}
+
 func (l *Lambertian) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
 	scatterDirection := hitRecord.Normal.Add(vector.RandomUnitVector())
 

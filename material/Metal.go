@@ -19,6 +19,10 @@ func NewMetal(albedo *color.Color, fuzz float64) *Metal {
 	}
 }
 
+func (m *Metal) Emitted(u, v float64, point *vector.Point3) *color.Color {
+	return color.Black()
+}
+
 func (m *Metal) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
 	reflected := vector.Reflect(rayIn.Direction, hitRecord.Normal)
 	reflected = vector.UnitVector(reflected).Add(vector.RandomUnitVector().MultiplyBy(m.fuzz))

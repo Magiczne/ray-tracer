@@ -21,6 +21,10 @@ func NewDielectric(refractionIndex float64) *Dielectic {
 	}
 }
 
+func (d *Dielectic) Emitted(u, v float64, point *vector.Point3) *color.Color {
+	return color.Black()
+}
+
 func (d *Dielectic) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
 	attenuation.CopyFrom(color.White())
 
