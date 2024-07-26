@@ -50,6 +50,10 @@ func NewIntervalFromIntervals(a, b *Interval) *Interval {
 	}
 }
 
+func (i *Interval) Add(displacement float64) *Interval {
+	return NewInterval(i.Min+displacement, i.Max+displacement)
+}
+
 func (i *Interval) Size() float64 {
 	return i.Max - i.Min
 }

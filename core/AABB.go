@@ -85,6 +85,10 @@ func (aabb *AABB) AxisInterval(axis constants.Axis) *util.Interval {
 	return aabb.Z
 }
 
+func (aabb *AABB) Add(offset *vector.Vector3) *AABB {
+	return NewAABBFromIntervals(aabb.X.Add(offset.X), aabb.Y.Add(offset.Y), aabb.Z.Add(offset.Z))
+}
+
 func (aabb *AABB) Hit(ray *Ray, rayTime *util.Interval) bool {
 	for axis := range 3 {
 		constantAxis := constants.Axis(axis)

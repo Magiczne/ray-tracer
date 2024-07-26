@@ -25,6 +25,9 @@ func CornellBox() {
 	world.Add(object.NewQuad(vector.NewPoint3(555, 555, 555), vector.NewVector3(-555, 0, 0), vector.NewVector3(0, 0, -555), white))
 	world.Add(object.NewQuad(vector.NewPoint3(0, 0, 555), vector.NewVector3(555, 0, 0), vector.NewVector3(0, 555, 0), white))
 
+	world.Add(object.NewBox(vector.NewPoint3(130, 0, 65), vector.NewPoint3(295, 165, 230), white))
+	world.Add(object.NewBox(vector.NewPoint3(265, 0, 295), vector.NewPoint3(430, 330, 460), white))
+
 	writer := writer.NewWriter(os.Args[1])
 
 	// Camera
