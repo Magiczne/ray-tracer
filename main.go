@@ -13,5 +13,5 @@ func main() {
 	scenes[7] = scene.SimpleLight
 	scenes[8] = scene.CornellBox
 
-	scenes[7]()
+	scenes[8]()
 }
