@@ -17,6 +17,7 @@ type Camera struct {
 	imageHeight     int
 	SamplesPerPixel int
 	MaxDepth        int
+	Background      *color.Color
 
 	VerticalFieldOfView float64
 	LookFrom            *vector.Point3
@@ -138,26 +139,26 @@ func (c *Camera) getRay(i int, j int) *Ray {
 
 func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 	if depth <= 0 {
-		return color.NewColor(0, 0, 0)
+		return color.Black()
 	}
 
 	hitRecord := world.Hit(ray, util.NewInterval(0.001, math.Inf(1)))
 
-	if hitRecord != nil {
-		scattered := EmptyRay()
-		attenuation := color.Black()
-
-		if hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
-			return attenuation.Multiply(c.rayColor(scattered, depth-1, world))
-		}
-
-		return color.Black()
+	if hitRecord == nil {
+		return c.Background
 	}
 
-	unitDirection := vector.UnitVector(ray.Direction)
-	a := 0.5 * (unitDirection.Y + 1.0)
+	scattered := EmptyRay()
+	attenuation := color.Black()
+	colorFromEmission := hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point)
 
-	return color.NewColor(1, 1, 1).MultiplyBy(1.0 - a).Add(color.NewColor(0.5, 0.7, 1.0).MultiplyBy(a))
+	if !hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
+		return colorFromEmission
+	}
+
+	colorFromScatter := attenuation.Multiply(c.rayColor(scattered, depth-1, world))
+
+	return colorFromEmission.Add(colorFromScatter)
 }
 
 func (c *Camera) sampleSquare() *vector.Vector3 {
