@@ -3,7 +3,7 @@ package main
 import "ray-tracer/scene"
 
 func main() {
-	switch 6 {
+	switch 7 {
 	case 1:
 		scene.MaterialTester()
 		break
@@ -26,6 +26,10 @@ func main() {
 
 	case 6:
 		scene.Quads()
+		break
+
+	case 7:
+		scene.SimpleLight()
 		break
 	}
 }
