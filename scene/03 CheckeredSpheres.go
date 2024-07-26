@@ -37,6 +37,7 @@ func CheckeredSpheres() {
 	camera.ImageWidth = 400      // 1200/400
 	camera.SamplesPerPixel = 100 // 500/10
 	camera.MaxDepth = 50
+	camera.Background = color.NewColor(0.7, 0.8, 1.0)
 
 	camera.VerticalFieldOfView = 20
 	camera.LookFrom = vector.NewPoint3(13, 2, 3)

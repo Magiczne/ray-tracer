@@ -2,6 +2,7 @@ package scene
 
 import (
 	"os"
+	"ray-tracer/color"
 	"ray-tracer/core"
 	"ray-tracer/material"
 	"ray-tracer/object"
@@ -27,6 +28,7 @@ func Earth() {
 	camera.ImageWidth = 400
 	camera.SamplesPerPixel = 100
 	camera.MaxDepth = 50
+	camera.Background = color.NewColor(0.7, 0.8, 1.0)
 
 	camera.VerticalFieldOfView = 20
 	camera.LookFrom = vector.NewPoint3(0, 0, 12)

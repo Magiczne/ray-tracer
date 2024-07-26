@@ -33,6 +33,7 @@ func Quads() {
 	camera.ImageWidth = 400
 	camera.SamplesPerPixel = 20
 	camera.MaxDepth = 50
+	camera.Background = color.NewColor(0.7, 0.8, 1.0)
 
 	camera.VerticalFieldOfView = 80
 	camera.LookFrom = vector.NewPoint3(0, 0, 9)
