@@ -12,6 +12,9 @@ func main() {
 	scenes[6] = scene.Quads
 	scenes[7] = scene.SimpleLight
 	scenes[8] = scene.CornellBox
+	scenes[9] = scene.SmokedCornellBox
+	scenes[10] = scene.CreateNextWeekFinalScene(800, 10000, 40)
+	scenes[11] = scene.CreateNextWeekFinalScene(400, 250, 4)
 
-	scenes[8]()
+	scenes[11]()
 }

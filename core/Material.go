@@ -7,5 +7,5 @@ import (
 
 type Material interface {
 	Emitted(u, v float64, point *vector.Point3) *color.Color
-	Scatter(rayIn *Ray, hitRecord *HitRecord, attenuation *color.Color, scattered *Ray) bool
+	Scatter(ray *Ray, hitRecord *HitRecord, attenuation *color.Color, scattered *Ray) bool
 }

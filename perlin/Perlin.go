@@ -9,6 +9,7 @@ import (
 const pointCount = 256
 
 type Perlin struct {
+	// TODO: this should be static
 	randomVectors []*vector.Vector3
 	permutationsX []int
 	permutationsY []int
