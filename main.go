@@ -16,5 +16,5 @@ func main() {
 	scenes[10] = scene.CreateNextWeekFinalScene(800, 10000, 40)
 	scenes[11] = scene.CreateNextWeekFinalScene(400, 250, 4)
 
-	scenes[11]()
+	scenes[8]()
 }

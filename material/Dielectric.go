@@ -2,7 +2,7 @@ package material
 
 import (
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"ray-tracer/color"
 	"ray-tracer/core"
 	"ray-tracer/util"

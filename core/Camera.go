@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"ray-tracer/color"
 	"ray-tracer/util"
 	"ray-tracer/vector"
