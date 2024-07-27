@@ -23,12 +23,16 @@ func (m *Metal) Emitted(u, v float64, point *vector.Point3) *color.Color {
 	return color.Black()
 }
 
-func (m *Metal) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
+func (m *Metal) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord) (bool, *core.Ray, *color.Color) {
 	reflected := vector.Reflect(rayIn.Direction, hitRecord.Normal)
 	reflected = vector.UnitVector(reflected).Add(vector.RandomUnitVector().MultiplyBy(m.fuzz))
 
-	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, reflected, rayIn.Time))
-	attenuation.CopyFrom(m.albedo)
+	scattered := core.NewTimedRay(hitRecord.Point, reflected, rayIn.Time)
+	attenuation := m.albedo
 
-	return vector.DotProduct(scattered.Direction, hitRecord.Normal) > 0
+	if vector.DotProduct(scattered.Direction, hitRecord.Normal) > 0 {
+		return true, scattered, attenuation
+	}
+
+	return false, nil, nil
 }

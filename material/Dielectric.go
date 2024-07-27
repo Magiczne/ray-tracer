@@ -25,8 +25,8 @@ func (d *Dielectic) Emitted(u, v float64, point *vector.Point3) *color.Color {
 	return color.Black()
 }
 
-func (d *Dielectic) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
-	attenuation.CopyFrom(color.White())
+func (d *Dielectic) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord) (bool, *core.Ray, *color.Color) {
+	attenuation := color.White()
 
 	refractionIndex := d.refractionIndex
 	if hitRecord.FrontFace {
@@ -46,7 +46,7 @@ func (d *Dielectic) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuat
 		direction = vector.Refract(unitDirection, hitRecord.Normal, refractionIndex)
 	}
 
-	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, direction, rayIn.Time))
+	scattered := core.NewTimedRay(hitRecord.Point, direction, rayIn.Time)
 
-	return true
+	return true, scattered, attenuation
 }

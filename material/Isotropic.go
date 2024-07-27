@@ -25,9 +25,9 @@ func (i *Isotropic) Emitted(u, v float64, point *vector.Point3) *color.Color {
 	return color.Black()
 }
 
-func (i *Isotropic) Scatter(ray *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
-	scattered.CopyFrom(core.NewTimedRay(hitRecord.Point, vector.RandomUnitVector(), ray.Time))
-	attenuation.CopyFrom(i.texture.Value(hitRecord.U, hitRecord.V, hitRecord.Point))
+func (i *Isotropic) Scatter(ray *core.Ray, hitRecord *core.HitRecord) (bool, *core.Ray, *color.Color) {
+	scattered := core.NewTimedRay(hitRecord.Point, vector.RandomUnitVector(), ray.Time)
+	attenuation := i.texture.Value(hitRecord.U, hitRecord.V, hitRecord.Point)
 
-	return true
+	return true, scattered, attenuation
 }

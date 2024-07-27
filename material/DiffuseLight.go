@@ -27,6 +27,6 @@ func (dl *DiffuseLight) Emitted(u, v float64, point *vector.Point3) *color.Color
 	return dl.texture.Value(u, v, point)
 }
 
-func (dl *DiffuseLight) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuation *color.Color, scattered *core.Ray) bool {
-	return false
+func (dl *DiffuseLight) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord) (bool, *core.Ray, *color.Color) {
+	return false, nil, nil
 }

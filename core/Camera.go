@@ -145,11 +145,9 @@ func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 	hitRecord := world.Hit(ray, util.NewInterval(0.001, math.Inf(1)))
 
 	if hitRecord != nil {
-		scattered := EmptyRay()
-		attenuation := color.Black()
 		color := hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point)
 
-		if hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
+		if ok, scattered, attenuation := hitRecord.Material.Scatter(ray, hitRecord); ok {
 			scatterColor := c.rayColor(scattered, depth-1, world)
 			color = color.Add(scatterColor.Multiply(attenuation))
 		}
@@ -158,20 +156,6 @@ func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 	}
 
 	return c.Background
-
-	// if hitRecord == nil {
-	// 	return c.Background
-	// }
-
-	// colorFromEmission := hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point)
-
-	// if !hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
-	// 	return colorFromEmission
-	// }
-
-	// colorFromScatter := attenuation.Multiply(c.rayColor(scattered, depth-1, world))
-
-	// return colorFromEmission.Add(colorFromScatter)
 }
 
 func (c *Camera) sampleSquare() *vector.Vector3 {
