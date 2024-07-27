@@ -129,6 +129,22 @@ func (aabb *AABB) LongestAxis() constants.Axis {
 	return constants.AxisZ
 }
 
+func (aabb *AABB) Min() *vector.Point3 {
+	return vector.NewPoint3(
+		aabb.X.Min,
+		aabb.Y.Min,
+		aabb.Z.Min,
+	)
+}
+
+func (aabb *AABB) Max() *vector.Point3 {
+	return vector.NewPoint3(
+		aabb.X.Max,
+		aabb.Y.Max,
+		aabb.Z.Max,
+	)
+}
+
 func (aabb *AABB) padToMinimums() {
 	// Adjust the AABB so that no side is narrower than some delta, padding if necessary.
 	delta := 0.0001

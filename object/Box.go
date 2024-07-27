@@ -17,12 +17,12 @@ func NewBox(a, b *vector.Point3, material core.Material) *core.HittableList {
 	dy := vector.NewVector3(0, max.Y-min.Y, 0)
 	dz := vector.NewVector3(0, 0, max.Z-min.Z)
 
-	box.Add(NewQuad(vector.NewPoint3(min.X, min.Y, max.Z), dx, dy, material))                // front
-	box.Add(NewQuad(vector.NewPoint3(max.X, min.Y, max.Z), dz.MultiplyBy(-1), dy, material)) // right
-	box.Add(NewQuad(vector.NewPoint3(max.X, min.Y, min.Z), dx.MultiplyBy(-1), dy, material)) // back
-	box.Add(NewQuad(vector.NewPoint3(min.X, min.Y, min.Z), dz, dy, material))                // left
-	box.Add(NewQuad(vector.NewPoint3(min.X, max.Y, max.Z), dx, dz.MultiplyBy(-1), material)) // top
-	box.Add(NewQuad(vector.NewPoint3(min.X, min.Y, min.Z), dx, dz, material))                // bottom
+	box.Add(NewQuad(vector.NewPoint3(min.X, min.Y, max.Z), dx, dy, material))          // front
+	box.Add(NewQuad(vector.NewPoint3(max.X, min.Y, max.Z), dz.Negate(), dy, material)) // right
+	box.Add(NewQuad(vector.NewPoint3(max.X, min.Y, min.Z), dx.Negate(), dy, material)) // back
+	box.Add(NewQuad(vector.NewPoint3(min.X, min.Y, min.Z), dz, dy, material))          // left
+	box.Add(NewQuad(vector.NewPoint3(min.X, max.Y, max.Z), dx, dz.Negate(), material)) // top
+	box.Add(NewQuad(vector.NewPoint3(min.X, min.Y, min.Z), dx, dz, material))          // bottom
 
 	return box
 }

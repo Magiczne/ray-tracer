@@ -6,6 +6,7 @@ import (
 	"ray-tracer/core"
 	"ray-tracer/material"
 	"ray-tracer/object"
+	"ray-tracer/transform"
 	"ray-tracer/vector"
 	"ray-tracer/writer"
 )
@@ -25,15 +26,32 @@ func CornellBox() {
 	world.Add(object.NewQuad(vector.NewPoint3(555, 555, 555), vector.NewVector3(-555, 0, 0), vector.NewVector3(0, 0, -555), white))
 	world.Add(object.NewQuad(vector.NewPoint3(0, 0, 555), vector.NewVector3(555, 0, 0), vector.NewVector3(0, 555, 0), white))
 
-	world.Add(object.NewBox(vector.NewPoint3(130, 0, 65), vector.NewPoint3(295, 165, 230), white))
-	world.Add(object.NewBox(vector.NewPoint3(265, 0, 295), vector.NewPoint3(430, 330, 460), white))
+	world.Add(
+		transform.NewTranslate(
+			transform.NewRotateY(
+				object.NewBox(vector.NewPoint3(0, 0, 0), vector.NewPoint3(165, 330, 165), white),
+				15,
+			),
+			vector.NewVector3(265, 0, 295),
+		),
+	)
+
+	world.Add(
+		transform.NewTranslate(
+			transform.NewRotateY(
+				object.NewBox(vector.NewPoint3(0, 0, 0), vector.NewPoint3(165, 165, 165), white),
+				-18,
+			),
+			vector.NewVector3(130, 0, 65),
+		),
+	)
 
 	writer := writer.NewWriter(os.Args[1])
 
 	// Camera
 	camera := core.NewCamera()
-	camera.AspectRatio = 16.0 / 9
-	camera.ImageWidth = 600
+	camera.AspectRatio = 1.0
+	camera.ImageWidth = 200
 	camera.SamplesPerPixel = 200
 	camera.MaxDepth = 50
 	camera.Background = color.NewColor(0, 0, 0)

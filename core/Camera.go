@@ -102,7 +102,7 @@ func (c *Camera) initialize() {
 
 	// Edge vectors
 	viewportU := c.u.MultiplyBy(viewportWidth)
-	viewportV := c.v.MultiplyBy(-1).MultiplyBy(viewportHeight)
+	viewportV := c.v.Negate().MultiplyBy(viewportHeight)
 
 	// Delta vectors from pixel to pixel
 	c.pixelDeltaU = viewportU.Divide(float64(c.ImageWidth))
@@ -144,21 +144,34 @@ func (c *Camera) rayColor(ray *Ray, depth int, world Hittable) *color.Color {
 
 	hitRecord := world.Hit(ray, util.NewInterval(0.001, math.Inf(1)))
 
-	if hitRecord == nil {
-		return c.Background
+	if hitRecord != nil {
+		scattered := EmptyRay()
+		attenuation := color.Black()
+		color := hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point)
+
+		if hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
+			scatterColor := c.rayColor(scattered, depth-1, world)
+			color = color.Add(scatterColor.Multiply(attenuation))
+		}
+
+		return color
 	}
 
-	scattered := EmptyRay()
-	attenuation := color.Black()
-	colorFromEmission := hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point)
+	return c.Background
 
-	if !hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
-		return colorFromEmission
-	}
+	// if hitRecord == nil {
+	// 	return c.Background
+	// }
 
-	colorFromScatter := attenuation.Multiply(c.rayColor(scattered, depth-1, world))
+	// colorFromEmission := hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point)
 
-	return colorFromEmission.Add(colorFromScatter)
+	// if !hitRecord.Material.Scatter(ray, hitRecord, attenuation, scattered) {
+	// 	return colorFromEmission
+	// }
+
+	// colorFromScatter := attenuation.Multiply(c.rayColor(scattered, depth-1, world))
+
+	// return colorFromEmission.Add(colorFromScatter)
 }
 
 func (c *Camera) sampleSquare() *vector.Vector3 {

@@ -31,7 +31,7 @@ func RandomVector3OnHemisphere(normal *Vector3) *Vector3 {
 		return onUnitSphere
 	}
 
-	return UnitVector(onUnitSphere).MultiplyBy(-1)
+	return UnitVector(onUnitSphere).Negate()
 }
 
 func RandomVector3InUnitDisk() *Vector3 {

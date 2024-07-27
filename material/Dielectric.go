@@ -34,7 +34,7 @@ func (d *Dielectic) Scatter(rayIn *core.Ray, hitRecord *core.HitRecord, attenuat
 	}
 
 	unitDirection := vector.UnitVector(rayIn.Direction)
-	cosTheta := math.Min(vector.DotProduct(unitDirection.MultiplyBy(-1), hitRecord.Normal), 1)
+	cosTheta := math.Min(vector.DotProduct(unitDirection.Negate(), hitRecord.Normal), 1)
 	sinTheta := math.Sqrt(1 - cosTheta*cosTheta)
 
 	cannotRefract := refractionIndex*sinTheta > 1.0

@@ -23,7 +23,7 @@ func Reflect(v, n *Vector3) *Vector3 {
 }
 
 func Refract(uv, n *Vector3, etaiOverEtat float64) *Vector3 {
-	cosTheta := math.Min(DotProduct(uv.MultiplyBy(-1), n), 1.0)
+	cosTheta := math.Min(DotProduct(uv.Negate(), n), 1.0)
 	rOutPerpendicular := uv.Add(n.MultiplyBy(cosTheta)).MultiplyBy(etaiOverEtat)
 	rOutParallel := n.MultiplyBy(-math.Sqrt(math.Abs(1 - rOutPerpendicular.LengthSquared())))
 

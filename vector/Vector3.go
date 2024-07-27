@@ -75,6 +75,10 @@ func (vec3 *Vector3) Divide(divisor float64) *Vector3 {
 	return vec3.MultiplyBy(1.0 / divisor)
 }
 
+func (vec3 *Vector3) Negate() *Vector3 {
+	return NewVector3(-vec3.X, -vec3.Y, -vec3.Z)
+}
+
 func (vec3 *Vector3) NearZero() bool {
 	epsilon := 1e-8
 
